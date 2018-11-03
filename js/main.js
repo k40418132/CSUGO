@@ -7,7 +7,7 @@ var World = {
     currentMarker: null,
     currentLocation: null,
 
-    loadPoisFromJsonData: function loadPoisFromJsonDataFn() {
+    loadPoisFromJsonData: function loadPoisFromJsonDataFn(lat, lon) {
         World.markerList = [];
         World.directionIndi = new AR.ImageResource("assets/indi.png");
 
@@ -18,12 +18,17 @@ var World = {
                 "longitude": parseFloat(poiData[i].lon),
                 "altitude": parseFloat(poiData[i].alt),
                 "title": poiData[i].title,
-                "class": poiData[i].class
+                "class": poiData[i].class,
+                "color": poiData[i].color,
+                "area": poiData[i].area,
+                "userLat": lat,
+                "userLon": lon
             };
 
             World.markerList.push(new Marker(thisPoi));
 
         }
+        World.onMarkerClassFilter(0);
         consoleWrite(i + " 地標載入完畢");
         showBubble(i + " 個地標成功載入");
     },
@@ -31,7 +36,7 @@ var World = {
     locationChanged: function locationChangedFn(lat, lon, alt, acc) {
 
         if (!World.initiallyLoadedData) {
-            World.loadPoisFromJsonData();
+            World.loadPoisFromJsonData(lat, lon);
             World.initiallyLoadedData = true;
         }
         World.updateDistance(lat, lon, alt, acc);
@@ -45,9 +50,9 @@ var World = {
             var distanceToUserValue = (distance > 999) ? ((distance / 1000).toFixed(2) + " km") : (Math.round(distance) + " m");
             World.markerList[i].distanceLabel.text = distanceToUserValue;
             distanceArray.push({ id: World.markerList[i].poiData.title, distance: Math.round(distance) });
-            //World.markerList[i].markerObject.locations[0].altitude = alt;
+            World.markerList[i].markerObject.locations[0].altitude = alt;
         }
-        distanceArray.sort(function (a, b) {
+        /*distanceArray.sort(function (a, b) {
             return a.distance > b.distance ? 1 : -1;
         });
 
@@ -61,9 +66,9 @@ var World = {
             this.onLocationArea(this.currentLocation, false);
             this.currentLocation = null;
             locationChanged("", false);
-        }
+        }*/
 
-        var poiWait2Sort = ClusterHelper.createClusteredPlaces(30, { 'lat': lat, 'lon': lon }, poiData);
+        /*var poiWait2Sort = ClusterHelper.createClusteredPlaces(30, { 'lat': lat, 'lon': lon }, poiData);
         var firstDistance;
         for (var i = 0; i < poiWait2Sort.length; i++) {
             if (poiWait2Sort[i].type == "cluster") {
@@ -90,7 +95,7 @@ var World = {
                     }
                 }
             }
-        }
+        }*/
     },
 
     onMarkerSelected: function onMarkerSelectedFn(marker) {
@@ -114,7 +119,11 @@ var World = {
     onLockedClick: function onLockedClickFn(id, toggle) {
         for (var i = 0; i < World.markerList.length; i++) {
             if (toggle) {
-                World.markerList[i].poiData.id == id ? World.markerList[i].directionIndi.enabled = true : World.markerList[i].markerObject.enabled = false;
+                showSearchPanel(false);
+                if (World.markerList[i].poiData.id == id) {
+                    showBubble("開始指引 " + World.markerList[i].poiData.title);
+                    World.markerList[i].directionIndi.enabled = true;
+                } else World.markerList[i].markerObject.enabled = false;
             }
             else {
                 World.markerList[i].poiData.id == id ? World.markerList[i].directionIndi.enabled = false : World.markerList[i].markerObject.enabled = true;
@@ -132,15 +141,45 @@ var World = {
 
     onLocationAreaPress: function onLocationAreaPressFn() {
         for (var i = 0; i < World.markerList.length; i++) {
-            if (World.markerList[i].poiData.title == this.currentLocation) {
+            if (World.markerList[i].poiData.id == this.currentLocation) {
                 this.onMarkerSelected(World.markerList[i]);
                 showCard(true, World.markerList[i].poiData.id);
             }
         }
+    },
+
+    onMarkerClassFilter: function onMarkerClassFilterFn(filter) {
+        for (var i = 0; i < World.markerList.length; i++) {
+            filter == World.markerList[i].poiData.class ? World.markerList[i].markerObject.enabled = true : World.markerList[i].markerObject.enabled = false;
+        }
+
+    },
+
+    onPoiGetDistance: function onPoiGetDistanceFn(id) {
+        for (var i = 0; i < World.markerList.length; i++) {
+            if (World.markerList[i].poiData.id == id) {
+                var distance = World.markerList[i].markerObject.locations[0].distanceToUser();
+                var distanceToUserValue = (distance > 999) ? ((distance / 1000).toFixed(2) + " km") : (Math.round(distance) + " m");
+                return (distanceToUserValue);
+            }
+        }
+    },
+
+    onSearchPanelPoiClick: function onSearchPanelPoiClickFn(id) {
+        for (var i = 0; i < World.markerList.length; i++) {
+            if (World.markerList[i].poiData.id == id) {
+                this.onMarkerSelected(World.markerList[i]);
+
+                showCardDelay(World.markerList[i].poiData.id, globalDelay);
+                globalDelay = 0;
+                consoleWrite(globalDelay);
+            }
+        }
+        console.log(id);
     }
 
 };
 AR.context.onLocationChanged = World.locationChanged;
 AR.context.onScreenClick = World.onScreenClick;
-AR.context.scene.scalingFactor = 0.5;
-AR.context.scene.maxScalingDistance = 300;
+AR.context.scene.scalingFactor = 0.3;
+AR.context.scene.maxScalingDistance = 250;

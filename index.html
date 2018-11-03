@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=0.8">
+  <meta name="viewport" content="width=device-width,initial-scale=0.8,maximum-scale=1.5">
   <script src="https://www.wikitude.com/libs/architect.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 
@@ -15,6 +15,7 @@
   <script type="text/javascript" src="js/fastclick.js"></script>
   <script type="text/javascript" src="js/clustering.js"></script>
   <script type="text/javascript" src="js/countUp.js"></script>
+  <script type="text/javascript" src="js/radar.js"></script>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
     crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="css/remove.css">
@@ -22,86 +23,97 @@
 </head>
 
 <body>
-  <!--<div id="consoleBox"></div>-->
+  <span id="refreshBtn" onclick='javascript:window.location.reload()'>重新整理</span>
+  <div id="consoleBox"></div>
   <div id="location"><i class="fas fa-map-marker-alt"></i><span></span></div>
-
-  <!--<ul class="btn-panel">
-    <li onclick="showMenu(true)"><i class="fas fa-ellipsis-h"></i></li>
-    <li><i class="fas fa-unlock"></i></li>
-    <li><i class="fas fa-search"></i></li>
-    <li id="Class"><i class="fas fa-map-pin"></i><span>校內大樓</span>
-      <ul>
-        <li>&nbsp;</li>
-        <li onclick="switchClass(this)">校內大樓</li>
-        <li onclick="switchClass(this)">行政處室</li>
-        <li onclick="switchClass(this)">學生餐廳</li>
-        <li onclick="switchClass(this)">運動場地</li>
-        <li onclick="switchClass(this)">便利商店</li>
-        <li onclick="switchClass(this)">特種地標</li>
-      </ul>
-    </li>
-  </ul>-->
+  <div class="radarContainer_left" id="radarContainer"></div>
+  <div class="search-panel">
+    <div><span>查詢地標</span><i class="fas fa-times"></i></div>
+    <div class="search-input"><i class="fas fa-search"></i><input id="searching" type="text" placeholder="建築名稱、大樓編號、行政單位"></div>
+    <div class="search-res"></div>
+  </div>
 
   <div class="btn-panel">
     <div><i class="fas fa-bars"></i><i class="fas fa-times"></i></div>
-    <div><i class="fas fa-cog"></i></div>
-    <div><i class="fas fa-map-pin"></i></div>
+    <div><i class="fas fa-location-arrow"></i></div>
+    <div><i class="fas fa-map-pin"></i>
+      <ul class="classList">
+        <li class="listChecked">校內大樓</li>
+        <li>行政處室</li>
+        <li>學生餐廳</li>
+        <li>運動場地</li>
+        <li>生活日常</li>
+        <li>停車場</li>
+        <li>盥洗室</li>
+      </ul>
+    </div>
     <div><i class="fas fa-search"></i></div>
+    <div><i class="fas fa-cog"></i></div>
   </div>
 
   <div id="menu">
 
-    <div class="menu-nav">
+    <div id="menu-nav">
       <i class="fas fa-arrow-left" onclick="showMenu(false)"></i>
     </div>
 
     <div id="gps-acc">
       <div id="acc">0</div>
+      <p></p>
       <p>GPS準確度</p>
     </div>
-
-    <div class="menu-setting menu-switch">
-      <span>雷達指示器</span>
-      <label class="switch">
-        <input type="checkbox" >
-        <span class="switch-slider"></span>
-      </label>
-    </div>
-    <div class="menu-setting menu-switch">
-      <span>GPS準確度過低提示</span>
-      <label class="switch">
-        <input type="checkbox" checked>
-        <span class="switch-slider"></span>
-      </label>
-    </div>
-
-
-
-    <div class="menu-setting">
-      <h1>UI縮放比例</h1>
-      <div class="slider-box">
-        <input type="range" min="1" max="10" value="6" class="slider" id="uiScale-slider">
-        <span id="uiScale-output"></span>
+    <div class="menu-section">
+      <div class="menu-setting menu-switch">
+        <span>雷達指示器</span>
+        <label class="switch">
+          <input id="setting-radar" type="checkbox">
+          <span class="switch-slider"></span>
+        </label>
       </div>
-    </div>
-    <div class="menu-setting">
-      <h1>地標縮放大小</h1>
-      <div class="slider-box">
-        <input type="range" min="1" max="5" value="2" class="slider" id="markerScale-slider">
-        <span id="markerScale-output"></span>
+      <div class="menu-setting menu-switch">
+        <span>GPS準確度過低提示</span>
+        <label class="switch">
+          <input id="setting-gps" type="checkbox" checked>
+          <span class="switch-slider"></span>
+        </label>
       </div>
-    </div>
-    <div class="menu-setting">
-      <h1>所在地標進入範圍</h1>
-      <div class="slider-box">
-        <input type="range" min="10" max="50" value="15" class="slider" id="markerLocationDistance-slider">
-        <span id="markerLocationDistance-output"></span>
+      <div class="menu-setting menu-switch">
+        <span>開發人員輸出</span>
+        <label class="switch">
+          <input id="setting-console" type="checkbox">
+          <span class="switch-slider"></span>
+        </label>
       </div>
     </div>
 
-
-
+<div class="menu-section">
+  <div class="menu-setting">
+    <h1>UI縮放比例</h1>
+    <div class="slider-box">
+      <input type="range" min="60" max="150" value="100" class="slider" id="uiScale-slider">
+      <span id="uiScale-output"></span>
+    </div>
   </div>
+</div>
+<div class="menu-section">
+  <div class="menu-setting">
+    <h1>地標縮放大小</h1>
+    <div class="slider-box">
+      <input type="range" min="1" max="5" value="2" class="slider" id="markerScale-slider">
+      <span id="markerScale-output"></span>
+    </div>
+  </div>
+</div>
+<div class="menu-section">
+  <div class="menu-setting">
+    <h1>地標進入範圍</h1>
+    <div class="slider-box">
+      <input type="range" min="10" max="50" value="15" class="slider" id="markerLocationDistance-slider">
+      <span id="markerLocationDistance-output"></span>
+    </div>
+  </div>
+</div>
+</div>
   <span id="bubble-notice">測試訊息</span>
 
 
@@ -129,7 +141,7 @@
             </td>
             <td>
               <h1>89</h1>
-              <p>完工年度</p>
+              <p>建築年度</p>
             </td>
           </tr>
         </table>
@@ -191,8 +203,6 @@
               <p>普通教室</p>
             </td>
           </tr>
-
-
           <tr>
             <td>3<sub>F</sub></td>
             <td>
@@ -215,13 +225,13 @@
               <p>進修部主任辦公室</p>
             </td>
           </tr>
-          <tr>
-            <td class="thr" colspan="2"></td>
+          <tr class="thr">
+            <td colspan="2"></td>
           </tr>
           <tr>
             <td>B<sub>1F</sub></td>
             <td>
-              <p>麗文書局</p>
+              <p>麗文書局正修店</p>
               <p>單槍管理室</p>
               <p>遊戲谷</p>
             </td>
@@ -239,19 +249,19 @@
     <div class="nav-btn">
       <div>
         <span>
-          <img src="assets/detail.png">
+          <i class="fas fa-ellipsis-h"></i>
           <p>更多資訊</p>
         </span>
       </div>
       <div onclick="locked(this)">
         <span>
-          <img src="assets/vbl.png">
-          <p>鎖定目標</p>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
         </span>
       </div>
       <div>
         <span>
-          <img src="assets/route.png">
+          <i class="fas fa-map-marked-alt"></i>
           <p>路線引導</p>
         </span>
       </div>
@@ -281,7 +291,7 @@
             </td>
             <td>
               <h1>93</h1>
-              <p>完工年度</p>
+              <p>建築年度</p>
             </td>
           </tr>
         </table>
@@ -362,8 +372,8 @@
               <p>觀光遊憩資料中心暨系學會</p>
             </td>
           </tr>
-          <tr>
-            <td class="thr" colspan="2"></td>
+          <tr class="thr">
+            <td colspan="2"></td>
           </tr>
           <tr>
             <td>B<sub>1F</sub></td>
@@ -387,19 +397,19 @@
     <div class="nav-btn">
       <div>
         <span>
-          <img src="assets/detail.png">
+          <i class="fas fa-ellipsis-h"></i>
           <p>更多資訊</p>
         </span>
       </div>
       <div onclick="locked(this)">
         <span>
-          <img src="assets/vbl.png">
-          <p>鎖定目標</p>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
         </span>
       </div>
       <div>
         <span>
-          <img src="assets/route.png">
+          <i class="fas fa-map-marked-alt"></i>
           <p>路線引導</p>
         </span>
       </div>
@@ -429,7 +439,7 @@
             </td>
             <td>
               <h1>84</h1>
-              <p>完工年度</p>
+              <p>建築年度</p>
             </td>
           </tr>
         </table>
@@ -537,8 +547,8 @@
               <p>超微量中心戴奧辛分析實驗室</p>
             </td>
           </tr>
-          <tr>
-            <td class="thr" colspan="2"></td>
+          <tr class="thr">
+            <td colspan="2"></td>
           </tr>
           <tr>
             <td>B<sub>1F</sub></td>
@@ -560,19 +570,19 @@
     <div class="nav-btn">
       <div>
         <span>
-          <img src="assets/detail.png">
+          <i class="fas fa-ellipsis-h"></i>
           <p>更多資訊</p>
         </span>
       </div>
       <div onclick="locked(this)">
         <span>
-          <img src="assets/vbl.png">
-          <p>鎖定目標</p>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
         </span>
       </div>
       <div>
         <span>
-          <img src="assets/route.png">
+          <i class="fas fa-map-marked-alt"></i>
           <p>路線引導</p>
         </span>
       </div>
@@ -602,7 +612,7 @@
             </td>
             <td>
               <h1>100</h1>
-              <p>完工年度</p>
+              <p>建築年度</p>
             </td>
           </tr>
         </table>
@@ -693,8 +703,8 @@
               <p>運動科學暨生理機能專業教室</p>
             </td>
           </tr>
-          <tr>
-            <td class="thr" colspan="2"></td>
+          <tr class="thr">
+            <td colspan="2"></td>
           </tr>
           <tr>
             <td>B<sub>1F</sub></td>
@@ -719,19 +729,19 @@
     <div class="nav-btn">
       <div>
         <span>
-          <img src="assets/detail.png">
+          <i class="fas fa-ellipsis-h"></i>
           <p>更多資訊</p>
         </span>
       </div>
       <div onclick="locked(this)">
         <span>
-          <img src="assets/vbl.png">
-          <p>鎖定目標</p>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
         </span>
       </div>
       <div>
         <span>
-          <img src="assets/route.png">
+          <i class="fas fa-map-marked-alt"></i>
           <p>路線引導</p>
         </span>
       </div>
@@ -761,7 +771,7 @@
             </td>
             <td>
               <h1>59</h1>
-              <p>完工年度</p>
+              <p>建築年度</p>
             </td>
           </tr>
         </table>
@@ -799,19 +809,19 @@
     <div class="nav-btn">
       <div>
         <span>
-          <img src="assets/detail.png">
+          <i class="fas fa-ellipsis-h"></i>
           <p>更多資訊</p>
         </span>
       </div>
       <div onclick="locked(this)">
         <span>
-          <img src="assets/vbl.png">
-          <p>鎖定目標</p>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
         </span>
       </div>
       <div>
         <span>
-          <img src="assets/route.png">
+          <i class="fas fa-map-marked-alt"></i>
           <p>路線引導</p>
         </span>
       </div>
@@ -841,7 +851,7 @@
             </td>
             <td>
               <h1>71</h1>
-              <p>完工年度</p>
+              <p>建築年度</p>
             </td>
           </tr>
         </table>
@@ -870,6 +880,27 @@
         </table>
       </div>
     </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div onclick="locked(this)">
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+
   </div>
 
   <div id="poi_7" class="side-card">
@@ -895,7 +926,7 @@
             </td>
             <td>
               <h1>71</h1>
-              <p>完工年度</p>
+              <p>建築年度</p>
             </td>
           </tr>
         </table>
@@ -949,8 +980,8 @@
               <p>精密儀器室</p>
             </td>
           </tr>
-          <tr>
-            <td class="thr" colspan="2"></td>
+          <tr class="thr">
+            <td colspan="2"></td>
           </tr>
           <tr>
             <td>B<sub>1F</sub></td>
@@ -972,19 +1003,19 @@
     <div class="nav-btn">
       <div>
         <span>
-          <img src="assets/detail.png">
+          <i class="fas fa-ellipsis-h"></i>
           <p>更多資訊</p>
         </span>
       </div>
       <div onclick="locked(this)">
         <span>
-          <img src="assets/vbl.png">
-          <p>鎖定目標</p>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
         </span>
       </div>
       <div>
         <span>
-          <img src="assets/route.png">
+          <i class="fas fa-map-marked-alt"></i>
           <p>路線引導</p>
         </span>
       </div>
@@ -1014,7 +1045,7 @@
             </td>
             <td>
               <h1>58</h1>
-              <p>完工年度</p>
+              <p>建築年度</p>
             </td>
           </tr>
         </table>
@@ -1066,8 +1097,8 @@
               <p>分子結構鑑定儀器室</p>
             </td>
           </tr>
-          <tr>
-            <td class="thr" colspan="2"></td>
+          <tr class="thr">
+            <td colspan="2"></td>
           </tr>
           <tr>
             <td>B<sub>1F</sub></td>
@@ -1084,19 +1115,19 @@
     <div class="nav-btn">
       <div>
         <span>
-          <img src="assets/detail.png">
+          <i class="fas fa-ellipsis-h"></i>
           <p>更多資訊</p>
         </span>
       </div>
       <div onclick="locked(this)">
         <span>
-          <img src="assets/vbl.png">
-          <p>鎖定目標</p>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
         </span>
       </div>
       <div>
         <span>
-          <img src="assets/route.png">
+          <i class="fas fa-map-marked-alt"></i>
           <p>路線引導</p>
         </span>
       </div>
@@ -1126,7 +1157,7 @@
             </td>
             <td>
               <h1>54</h1>
-              <p>完工年度</p>
+              <p>建築年度</p>
             </td>
           </tr>
         </table>
@@ -1181,19 +1212,19 @@
     <div class="nav-btn">
       <div>
         <span>
-          <img src="assets/detail.png">
+          <i class="fas fa-ellipsis-h"></i>
           <p>更多資訊</p>
         </span>
       </div>
       <div onclick="locked(this)">
         <span>
-          <img src="assets/vbl.png">
-          <p>鎖定目標</p>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
         </span>
       </div>
       <div>
         <span>
-          <img src="assets/route.png">
+          <i class="fas fa-map-marked-alt"></i>
           <p>路線引導</p>
         </span>
       </div>
@@ -1223,7 +1254,7 @@
             </td>
             <td>
               <h1>80</h1>
-              <p>完工年度</p>
+              <p>建築年度</p>
             </td>
           </tr>
         </table>
@@ -1281,19 +1312,19 @@
     <div class="nav-btn">
       <div>
         <span>
-          <img src="assets/detail.png">
+          <i class="fas fa-ellipsis-h"></i>
           <p>更多資訊</p>
         </span>
       </div>
       <div onclick="locked(this)">
         <span>
-          <img src="assets/vbl.png">
-          <p>鎖定目標</p>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
         </span>
       </div>
       <div>
         <span>
-          <img src="assets/route.png">
+          <i class="fas fa-map-marked-alt"></i>
           <p>路線引導</p>
         </span>
       </div>
@@ -1323,7 +1354,7 @@
             </td>
             <td>
               <h1>76</h1>
-              <p>完工年度</p>
+              <p>建築年度</p>
             </td>
           </tr>
         </table>
@@ -1374,8 +1405,8 @@
               <p>危機管理學會聯絡處</p>
             </td>
           </tr>
-          <tr>
-            <td class="thr" colspan="2"></td>
+          <tr class="thr">
+            <td colspan="2"></td>
           </tr>
           <tr>
             <td>B<sub>1F</sub></td>
@@ -1395,19 +1426,19 @@
     <div class="nav-btn">
       <div>
         <span>
-          <img src="assets/detail.png">
+          <i class="fas fa-ellipsis-h"></i>
           <p>更多資訊</p>
         </span>
       </div>
       <div onclick="locked(this)">
         <span>
-          <img src="assets/vbl.png">
-          <p>鎖定目標</p>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
         </span>
       </div>
       <div>
         <span>
-          <img src="assets/route.png">
+          <i class="fas fa-map-marked-alt"></i>
           <p>路線引導</p>
         </span>
       </div>
@@ -1437,7 +1468,7 @@
             </td>
             <td>
               <h1>88</h1>
-              <p>完工年度</p>
+              <p>建築年度</p>
             </td>
           </tr>
         </table>
@@ -1466,30 +1497,693 @@
     <div class="nav-btn">
       <div>
         <span>
-          <img src="assets/detail.png">
+          <i class="fas fa-ellipsis-h"></i>
           <p>更多資訊</p>
         </span>
       </div>
       <div onclick="locked(this)">
         <span>
-          <img src="assets/vbl.png">
-          <p>鎖定目標</p>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
         </span>
       </div>
       <div>
         <span>
-          <img src="assets/route.png">
+          <i class="fas fa-map-marked-alt"></i>
           <p>路線引導</p>
         </span>
       </div>
     </div>
   </div>
 
-  <div id="poi_13" class="side-card spec-card">
-    <span class="bID" style="display:none">0</span>
+  <div id="poi_13" class="side-card">
+    <span class="bID">13</span>
     <div class="card-content">
       <div class="circle-img">
         <img src="assets/poi_img/poi_13.jpg">
+      </div>
+      <div class="title">
+        <h1>機械工程館</h1>
+        <h2>Mechanical Engineering Building</h2>
+      </div>
+      <div class="info">
+        <table>
+          <tr>
+            <td>
+              <h1>4</h1>
+              <p>樓層總數</p>
+            </td>
+            <td>
+              <h1>4,184</h1>
+              <p>占地面積</p>
+            </td>
+            <td>
+              <h1>72</h1>
+              <p>建築年度</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="floor">
+        <table cellspacing="20">
+          <tr>
+            <td>4<sub>F</sub></td>
+            <td>
+              <p>CAE 實驗室</p>
+              <p>機電整合實驗室</p>
+              <p>感測器與信號處理實驗室</p>
+              <p>創意機構設計與應用實驗室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>3<sub>F</sub></td>
+            <td>
+              <p>超冷實驗室</p>
+              <p>機電系統實驗室</p>
+              <p>精密量測實驗室</p>
+              <p>非破壞檢測實驗室</p>
+              <p>金相顯微鏡實驗室</p>
+              <p>聲光電波應用實驗室</p>
+              <p>密封材料測試實驗室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>2<sub>F</sub></td>
+            <td>
+              <p>系所辦公室</p>
+              <p>精密量測實驗室</p>
+              <p>氣液壓控制實驗室</p>
+              <p>磨潤與固力實驗室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>1<sub>F</sub></td>
+            <td>
+              <p>逆向工程實驗室</p>
+              <p>CAD/CAM 實驗室</p>
+              <p>三次元量測實驗室</p>
+              <p>電腦數控工具實驗室</p>
+            </td>
+          </tr>
+          <tr class="thr">
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td>B<sub>1F</sub></td>
+            <td>
+              <p>變電室</p>
+              <p>溫控實驗室</p>
+              <p>多軸加工實驗室</p>
+              <p>五軸加工實驗室</p>
+              <p>微放電加工實驗室</p>
+              <p>工程研究科技中心</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div onclick="locked(this)">
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_14" class="side-card">
+    <span class="bID">16</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_14.jpg">
+      </div>
+      <div class="title">
+        <h1>電機工程館</h1>
+        <h2>Electrical Engineering</h2>
+      </div>
+      <div class="info">
+        <table>
+          <tr>
+            <td>
+              <h1>5</h1>
+              <p>樓層總數</p>
+            </td>
+            <td>
+              <h1>5,480</h1>
+              <p>占地面積</p>
+            </td>
+            <td>
+              <h1>68</h1>
+              <p>建築年度</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="floor">
+        <table cellspacing="20">
+          <tr>
+            <td>5<sub>F</sub></td>
+            <td>
+              <p>綠能實驗室</p>
+              <p>創意研發實驗室</p>
+              <p>光電薄膜實驗室</p>
+              <p>光電元件實驗室</p>
+              <p>奈米光電實驗室</p>
+              <p>太陽能監控實驗室</p>
+              <p>智慧電能IC設計實驗室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>4<sub>F</sub></td>
+            <td>
+              <p>光電實習室</p>
+              <p>風光電實驗室</p>
+              <p>能源管理實驗室</p>
+              <p>電能管理實驗室</p>
+              <p>工業配線丙級實驗室</p>
+              <p>PC-Based 控制實驗室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>3<sub>F</sub></td>
+            <td>
+              <p>會議室</p>
+              <p>電腦教室</p>
+              <p>電子學習實習室/控制實習室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>2<sub>F</sub></td>
+            <td>
+              <p>研討室</p>
+              <p>系辦公室</p>
+              <p>教師研究室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>1<sub>F</sub></td>
+            <td>
+              <p>防塵防水實驗室</p>
+              <p>電機機械實驗室</p>
+              <p>電子電力實習室</p>
+              <p>電動機控制實習室</p>
+              <p>單晶片實習室</p>
+              <p>電能監控實驗室</p>
+              <p>可程式控制實習室</p>
+            </td>
+          </tr>
+          <tr class="thr">
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td>B<sub>1F</sub></td>
+            <td>
+              <p>電機系系學會</p>
+              <p>燈具安規實驗室</p>
+              <p>照明光學實驗室</p>
+              <p>電磁量測實驗室</p>
+              <p>乙級工業配線實習室</p>
+              <p>乙級室內配線實驗室</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div onclick="locked(this)">
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_15" class="side-card">
+    <span class="bID">13</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_15.jpg">
+      </div>
+      <div class="title">
+        <h1>南校區教學大樓</h1>
+        <h2>Southem School Teaching Building</h2>
+      </div>
+      <div class="info">
+        <table>
+          <tr>
+            <td>
+              <h1>4</h1>
+              <p>樓層總數</p>
+            </td>
+            <td>
+              <h1>5,975</h1>
+              <p>占地面積</p>
+            </td>
+            <td>
+              <h1>62</h1>
+              <p>建築年度</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="floor">
+        <table cellspacing="20">
+          <tr>
+            <td>4<sub>F</sub></td>
+            <td>
+              <p>普通教室</p>
+              <p>餐飲系辦公室</p>
+              <p>中式米麵食教室</p>
+              <p>太陽光電系統工程訓練教室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>3<sub>F</sub></td>
+            <td>
+              <p>普通教室</p>
+              <p>地方小吃教室</p>
+              <p>中餐示範教室</p>
+              <p>中餐烹飪專業教室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>2<sub>F</sub></td>
+            <td>
+              <p>配膳室</p>
+              <p>異國料理教室</p>
+              <p>西餐烹飪專業教室</p>
+              <p>西餐與烘焙示範教室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>1<sub>F</sub></td>
+            <td>
+              <p>點心坊</p>
+              <p>冷凍庫</p>
+              <p>乾貨儲藏室</p>
+              <p>器具儲藏室</p>
+              <p>烘焙專業教室</p>
+              <p>實習餐廳廚房</p>
+              <p>瓦斯槽儲存間</p>
+              <p>高低壓電力實驗室</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div onclick="locked(this)">
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_16" class="side-card">
+    <span class="bID">18</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_16.jpg">
+      </div>
+      <div class="title">
+        <h1>管理學院</h1>
+        <h2>College of Management Building</h2>
+      </div>
+      <div class="info">
+        <table>
+          <tr>
+            <td>
+              <h1>5</h1>
+              <p>樓層總數</p>
+            </td>
+            <td>
+              <h1>5,433</h1>
+              <p>占地面積</p>
+            </td>
+            <td>
+              <h1>83</h1>
+              <p>建築年度</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="floor">
+        <table cellspacing="20">
+          <tr>
+            <td>5<sub>F</sub></td>
+            <td>
+              <p>企管系學會</p>
+              <p>財會資訊實習室</p>
+              <p>營運模擬演練教室</p>
+              <p>智慧零售實驗室</p>
+              <p>產業策略發展中心</p>
+              <p>行銷企劃發展教室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>4<sub>F</sub></td>
+            <td>
+              <p>普通教室</p>
+              <p>商業與網路應用資訊實習室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>3<sub>F</sub></td>
+            <td>
+              <p>普通教室</p>
+              <p>企管系辦公室</p>
+              <p>跨國貿易電腦實習室</p>
+              <p>Web CATI市調與網創中心</p>
+            </td>
+          </tr>
+          <tr>
+            <td>2<sub>F</sub></td>
+            <td>
+              <p>普通教室</p>
+              <p>國際商務語言教室</p>
+              <p>創意產業經營學業學程辦公室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>1<sub>F</sub></td>
+            <td>
+              <p>會議室</p>
+              <p>普通教室</p>
+              <p>個案教學教室</p>
+              <p>國企系系辦公室</p>
+              <p>國企系系主任辦公室</p>
+            </td>
+          </tr>
+          <tr class="thr">
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td>B<sub>1F</sub></td>
+            <td>
+              <p>國企系學會</p>
+              <p>創意企劃實習室</p>
+              <p>創意製作實習室</p>
+              <p>創意發想與實做工坊</p>
+              <p>國際商展模擬空間</p>
+              <p>國際商務情境教室</p>
+              <p>國際企業情境教室</p>
+              <p>台商貿易與運籌實習室</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div onclick="locked(this)">
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_17" class="side-card">
+    <span class="bID">19</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_17.jpg">
+      </div>
+      <div class="title">
+        <h1>學生宿舍</h1>
+        <h2>Student Dormitory</h2>
+      </div>
+      <div class="info">
+        <table>
+          <tr>
+            <td>
+              <h1>13</h1>
+              <p>樓層總數</p>
+            </td>
+            <td>
+              <h1>11,173</h1>
+              <p>占地面積</p>
+            </td>
+            <td>
+              <h1>83</h1>
+              <p>建築年度</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="floor">
+        <table cellspacing="20">
+          <tr>
+            <td>8<sub>F</sub>~13<sub>F</sub></td>
+            <td>
+              <p>女生宿舍</p>
+            </td>
+          </tr>
+          <tr>
+            <td>2<sub>F</sub>~7<sub>F</sub></td>
+            <td>
+              <p>男生宿舍</p>
+            </td>
+          </tr>
+          <tr>
+            <td>1<sub>F</sub></td>
+            <td>
+              <p>交誼廳</p>
+              <p>舍監室</p>
+              <p>無障礙寢室</p>
+              <p>外籍交換生宿舍</p>
+            </td>
+          </tr>
+          <tr class="thr">
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td>B<sub>1F</sub></td>
+            <td>
+              <p>教室</p>
+              <p>研討室</p>
+              <p>自修區</p>
+              <p>中廰閱覽區</p>
+              <p>正修宿舍自學中心</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div onclick="locked(this)">
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_18" class="side-card">
+    <span class="bID">18</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_18.jpg">
+      </div>
+      <div class="title">
+        <h1>幼兒保育館</h1>
+        <h2>Early Childhood Building</h2>
+      </div>
+      <div class="info">
+        <table>
+          <tr>
+            <td>
+              <h1>6</h1>
+              <p>樓層總數</p>
+            </td>
+            <td>
+              <h1>6,349</h1>
+              <p>占地面積</p>
+            </td>
+            <td>
+              <h1>88</h1>
+              <p>建築年度</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="floor">
+        <table cellspacing="20">
+          <tr>
+            <td>6<sub>F</sub></td>
+            <td>
+              <p>會客室</p>
+              <p>教師研究室</p>
+              <p>幼保系系學會</p>
+              <p>數位創意攝影棚</p>
+            </td>
+          </tr>
+          <tr>
+            <td>5<sub>F</sub></td>
+            <td>
+              <p>音樂教室</p>
+              <p>會議室</p>
+              <p>多功能劇場</p>
+              <p>鍵盤樂教室</p>
+              <p>課後托育教室</p>
+              <p>教保教學演示專業教室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>4<sub>F</sub></td>
+            <td>
+              <p>律動教室</p>
+              <p>輔導小棧</p>
+              <p>遊戲治療室</p>
+              <p>兒童資源中</p>
+              <p>感覺統合教室</p>
+              <p>托育家政教室</p>
+              <p>動畫創作工作室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>3<sub>F</sub></td>
+            <td>
+              <p>數位系系學會</p>
+              <p>互動科技實習室</p>
+              <p>影音動畫實習室</p>
+              <p>創意媒體實習室</p>
+              <p>數位多媒體設計系辦公室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>2<sub>F</sub></td>
+            <td>
+              <p>普通教室</p>
+              <p>創客實習室</p>
+              <p>校安中心值勤室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>1<sub>F</sub></td>
+            <td>
+              <p>開標室</p>
+              <p>校安中心</p>
+              <p>生活輔導組</p>
+              <p>軍訓辦公室</p>
+              <p>幼保系主任暨系辦公室</p>
+            </td>
+          </tr>
+          <tr class="thr">
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td>B<sub>1F</sub></td>
+            <td>
+              <p>大講堂</p>
+              <p>插畫室</p>
+              <p>營養膳食製作室</p>
+              <p>育嬰示範教室</p>
+              <p>生命科學示範教室</p>
+              <p>保母檢定試場＆專業教室</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div onclick="locked(this)">
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_25" class="side-card spec-card">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_25.jpg">
       </div>
       <div class="title">
         <h1>7-11正修門市</h1>
@@ -1520,30 +2214,30 @@
     <div class="nav-btn">
       <div>
         <span>
-          <img src="assets/detail.png">
+          <i class="fas fa-ellipsis-h"></i>
           <p>更多資訊</p>
         </span>
       </div>
       <div onclick="locked(this)">
         <span>
-          <img src="assets/vbl.png">
-          <p>鎖定目標</p>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
         </span>
       </div>
       <div>
         <span>
-          <img src="assets/route.png">
+          <i class="fas fa-map-marked-alt"></i>
           <p>路線引導</p>
         </span>
       </div>
     </div>
   </div>
 
-  <div id="poi_14" class="side-card">
+  <div id="poi_26" class="side-card">
     <span class="bID" style="display:none">0</span>
     <div class="card-content">
       <div class="circle-img">
-        <img src="assets/poi_img/poi_14.jpg">
+        <img src="assets/poi_img/poi_26.jpg">
       </div>
       <div class="title">
         <h1>麗文書局正修店</h1>
@@ -1576,19 +2270,19 @@
     <div class="nav-btn">
       <div>
         <span>
-          <img src="assets/detail.png">
+          <i class="fas fa-ellipsis-h"></i>
           <p>更多資訊</p>
         </span>
       </div>
       <div onclick="locked(this)">
         <span>
-          <img src="assets/vbl.png">
-          <p>鎖定目標</p>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
         </span>
       </div>
       <div>
         <span>
-          <img src="assets/route.png">
+          <i class="fas fa-map-marked-alt"></i>
           <p>路線引導</p>
         </span>
       </div>
