@@ -174,10 +174,7 @@ function keyWordInitial() {
 
 
 
-function updateLocationAccuracy(positon) {
-  consoleWrite(positon.coords.latitude);
-  acc = positon.coords.accuracy;
-  consoleWrite(acc);
+function updateLocationAccuracy(acc) {
   /*var demo = new CountUp('acc', Number($("#acc").html()), acc, 0, 1);
   if (!demo.error) {
     demo.start();
@@ -200,14 +197,14 @@ function updateLocationAccuracy(positon) {
   }
 }
 
-function initLocationAccuracy() {
+/*function initLocationAccuracy() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(updateLocationAccuracy);
     showBubble("支援Geolocation");
   } else {
     showBubble("不支援Geolocation");
   }
-}
+}*/
 
 
 
@@ -367,7 +364,7 @@ $("#configBtn").click(function(){
   bubbleNoticePool = [];
   onOrientationchange();
   keyWordInitial();
-  initLocationAccuracy();
+  //initLocationAccuracy();
   //showMenu(1);
   //showCard(true, "poi_1");
   window.addEventListener("orientationchange", onOrientationchange, false);

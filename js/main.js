@@ -8,7 +8,7 @@ var World = {
     currentLocation: null,
     currentClassMarker: null,
     clusterAngle: 0,
-    altOffset:0,
+    altOffset: 0,
 
     loadPoisFromJsonData: function loadPoisFromJsonDataFn(lat, lon) {
         World.markerList = [];
@@ -42,10 +42,11 @@ var World = {
             World.loadPoisFromJsonData(lat, lon);
             World.initiallyLoadedData = true;
         }
-        World.updateDistance(lat, lon, alt);
+        World.updateDistance(lat, lon, alt, acc);
     },
 
-    updateDistance: function updateDistanceFn(lat, lon, alt) {
+    updateDistance: function updateDistanceFn(lat, lon, alt, acc) {
+        updateLocationAccuracy(acc);
         for (var i = 0; i < World.markerList.length; i++) {
             var distance = World.markerList[i].markerObject.locations[0].distanceToUser();
             var distanceToUserValue = (distance > 999) ? ((distance / 1000).toFixed(2) + " km") : (Math.round(distance) + " m");
@@ -54,8 +55,8 @@ var World = {
         }
 
 
-       var poiWait2Sort = ClusterHelper.createClusteredPlaces(this.clusterAngle, { 'lat': lat, 'lon': lon }, this.currentClassMarker);
-        //consoleWrite("b: " + bubbleAngle + " c: " + this.clusterAngle + " offset: " + this.altOffset);
+        var poiWait2Sort = ClusterHelper.createClusteredPlaces(this.clusterAngle, { 'lat': lat, 'lon': lon }, this.currentClassMarker);
+        consoleWrite("b: " + bubbleAngle + " c: " + this.clusterAngle + " offset: " + this.altOffset);
         for (var i = 0; i < poiWait2Sort.length; i++) {
             if (poiWait2Sort[i].type == "cluster") {
 
@@ -71,7 +72,7 @@ var World = {
             } else {
                 for (var m = 0; m < World.markerList.length; m++) {
                     if (World.markerList[m].poiData.id == poiWait2Sort[i].places[0].id) {
-                        World.markerList[m].markerObject.locations[0].altitude = alt-5;
+                        World.markerList[m].markerObject.locations[0].altitude = alt - 5;
                     }
                 }
             }
@@ -171,6 +172,4 @@ var World = {
 };
 AR.context.onLocationChanged = World.locationChanged;
 AR.context.onScreenClick = World.onScreenClick;
-/*AR.context.scene.scalingFactor = 0.8;
-AR.context.scene.maxScalingDistance = 200;
-AR.context.scene.minScalingDistance = 10;*/
+AR.context.openInBrowser("https://www.w3schools.com/html/html5_geolocation.asp", 1);

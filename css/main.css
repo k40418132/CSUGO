@@ -1,4 +1,4 @@
-/*@import url('https://fonts.googleapis.com/earlyaccess/notosanstc.css');*/
+@import url('https://fonts.googleapis.com/earlyaccess/notosanstc.css');
 
 @font-face {
     font-family: 'Trebuchet MS';
@@ -77,7 +77,9 @@ body {
     right: 0;
     transform: translateX(100%);
     transition: .3s;
-    height: 100vh;
+    height: 95vh;
+    border-radius: 15px 0 0 0;
+    bottom: 0;
     width: 40%;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -891,7 +893,7 @@ mark {
         border: 3px solid rgba(255, 255, 255, 0.787);
     }
     .title h1 {
-        font-size: 24px;
+        font-size: 28px;
     }
     .title h2 {
         font-size: 12px;

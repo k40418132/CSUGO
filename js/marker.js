@@ -22,10 +22,10 @@ function Marker(poiData) {
             break;
         case 2:
             iconSize = 1.5;
-            labelSize = 0.65;
-            this.labelX = 1.5;
+            labelSize = 0.55;
+            this.labelX = 1.7;
             this.labelY = -0.4;
-            this.labelTriggerX = 1.7;
+            this.labelTriggerX = 1.8;
             this.labelTriggerY = -0.5;
             break;
         case 3:
@@ -117,7 +117,7 @@ function Marker(poiData) {
             poiData.area = [{
                 "lat": poiData.lat,
                 "lon": poiData.lon,
-                "radius": 30
+                "radius": 20
             }];
             
         }
