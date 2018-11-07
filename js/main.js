@@ -6,6 +6,9 @@ var World = {
     markerList: [],
     currentMarker: null,
     currentLocation: null,
+    currentClassMarker: null,
+    clusterAngle: 0,
+    altOffset:0,
 
     loadPoisFromJsonData: function loadPoisFromJsonDataFn(lat, lon) {
         World.markerList = [];
@@ -14,8 +17,8 @@ var World = {
         for (var i = 0; i < poiData.length; i++) {
             var thisPoi = {
                 "id": poiData[i].id,
-                "latitude": parseFloat(poiData[i].lat),
-                "longitude": parseFloat(poiData[i].lon),
+                "lat": parseFloat(poiData[i].lat),
+                "lon": parseFloat(poiData[i].lon),
                 "altitude": parseFloat(poiData[i].alt),
                 "title": poiData[i].title,
                 "class": poiData[i].class,
@@ -39,63 +42,40 @@ var World = {
             World.loadPoisFromJsonData(lat, lon);
             World.initiallyLoadedData = true;
         }
-        World.updateDistance(lat, lon, alt, acc);
+        World.updateDistance(lat, lon, alt);
     },
 
-    updateDistance: function updateDistanceFn(lat, lon, alt, acc) {
-        updateAcc(acc);
-        var distanceArray = [];
+    updateDistance: function updateDistanceFn(lat, lon, alt) {
         for (var i = 0; i < World.markerList.length; i++) {
             var distance = World.markerList[i].markerObject.locations[0].distanceToUser();
             var distanceToUserValue = (distance > 999) ? ((distance / 1000).toFixed(2) + " km") : (Math.round(distance) + " m");
             World.markerList[i].distanceLabel.text = distanceToUserValue;
-            distanceArray.push({ id: World.markerList[i].poiData.title, distance: Math.round(distance) });
-            World.markerList[i].markerObject.locations[0].altitude = alt;
+            //World.markerList[i].markerObject.locations[0].altitude = alt;
         }
-        /*distanceArray.sort(function (a, b) {
-            return a.distance > b.distance ? 1 : -1;
-        });
 
-        if (distanceArray[0].distance < 10) {
-            if (this.currentLocation != distanceArray[0].id) {
-                this.currentLocation = distanceArray[0].id;
-                this.onLocationArea(this.currentLocation, true);
-                locationChanged(this.currentLocation, true);
-            }
-        } else {
-            this.onLocationArea(this.currentLocation, false);
-            this.currentLocation = null;
-            locationChanged("", false);
-        }*/
 
-        /*var poiWait2Sort = ClusterHelper.createClusteredPlaces(30, { 'lat': lat, 'lon': lon }, poiData);
-        var firstDistance;
+       var poiWait2Sort = ClusterHelper.createClusteredPlaces(this.clusterAngle, { 'lat': lat, 'lon': lon }, this.currentClassMarker);
+        //consoleWrite("b: " + bubbleAngle + " c: " + this.clusterAngle + " offset: " + this.altOffset);
         for (var i = 0; i < poiWait2Sort.length; i++) {
             if (poiWait2Sort[i].type == "cluster") {
 
                 for (var j = 0; j < poiWait2Sort[i].places.length; j++) {
-
                     for (var k = 0; k < World.markerList.length; k++) {
                         if (World.markerList[k].poiData.id == poiWait2Sort[i].places[j].id) {
-
-                            if (j != 0) {
-                                var offset = Math.abs(Math.round(firstDistance - World.markerList[k].markerObject.locations[0].distanceToUser()));
-                                World.markerList[k].markerObject.locations[0].altitude = alt + offset;
-                            } else {
-                                firstDistance = World.markerList[k].markerObject.locations[0].distanceToUser();
-                                World.markerList[k].markerObject.locations[0].altitude = alt;
-                            }
+                            var offset = j * this.altOffset;
+                            World.markerList[k].markerObject.locations[0].altitude = alt + offset;
+                            //consoleWrite(World.markerList[k].poiData.title+":"+offset);
                         }
                     }
                 }
             } else {
                 for (var m = 0; m < World.markerList.length; m++) {
                     if (World.markerList[m].poiData.id == poiWait2Sort[i].places[0].id) {
-                        World.markerList[m].markerObject.locations[0].altitude = alt;
+                        World.markerList[m].markerObject.locations[0].altitude = alt-5;
                     }
                 }
             }
-        }*/
+        }
     },
 
     onMarkerSelected: function onMarkerSelectedFn(marker) {
@@ -126,7 +106,8 @@ var World = {
                 } else World.markerList[i].markerObject.enabled = false;
             }
             else {
-                World.markerList[i].poiData.id == id ? World.markerList[i].directionIndi.enabled = false : World.markerList[i].markerObject.enabled = true;
+                if (World.markerList[i].poiData.id == id) World.markerList[i].directionIndi.enabled = false;
+                if (World.markerList[i].poiData.class == this.currentClassMarker[0].class) World.markerList[i].markerObject.enabled = true;
             }
         }
     },
@@ -149,10 +130,13 @@ var World = {
     },
 
     onMarkerClassFilter: function onMarkerClassFilterFn(filter) {
+        this.currentClassMarker = [];
         for (var i = 0; i < World.markerList.length; i++) {
-            filter == World.markerList[i].poiData.class ? World.markerList[i].markerObject.enabled = true : World.markerList[i].markerObject.enabled = false;
+            if (filter == World.markerList[i].poiData.class) {
+                World.markerList[i].markerObject.enabled = true;
+                this.currentClassMarker.push(World.markerList[i].poiData);
+            } else World.markerList[i].markerObject.enabled = false;
         }
-
     },
 
     onPoiGetDistance: function onPoiGetDistanceFn(id) {
@@ -169,17 +153,24 @@ var World = {
         for (var i = 0; i < World.markerList.length; i++) {
             if (World.markerList[i].poiData.id == id) {
                 this.onMarkerSelected(World.markerList[i]);
-
-                showCardDelay(World.markerList[i].poiData.id, globalDelay);
-                globalDelay = 0;
-                consoleWrite(globalDelay);
+                showCardDelay(World.markerList[i].poiData.id, true);
             }
         }
-        console.log(id);
+    },
+
+    setMaxScalingDistance: function (value) {
+        AR.context.scene.maxScalingDistance = value;
+    },
+    setMinScalingDistance: function (value) {
+        AR.context.scene.minScalingDistance = value;
+    },
+    setScalingFactor: function (value) {
+        AR.context.scene.scalingFactor = value;
     }
 
 };
 AR.context.onLocationChanged = World.locationChanged;
 AR.context.onScreenClick = World.onScreenClick;
-AR.context.scene.scalingFactor = 0.3;
-AR.context.scene.maxScalingDistance = 250;
+/*AR.context.scene.scalingFactor = 0.8;
+AR.context.scene.maxScalingDistance = 200;
+AR.context.scene.minScalingDistance = 10;*/

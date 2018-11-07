@@ -25,7 +25,7 @@ body {
     overflow-y: hidden;
 }
 
-#refreshBtn{
+#refreshBtn {
     position: absolute;
     background: #4183fd;
     padding: 10px;
@@ -35,6 +35,21 @@ body {
     right: 0;
     left: 0;
     width: fit-content;
+}
+
+#configBtn {
+    padding: 5px;
+    width: 30%;
+    text-align: center;
+    background: #4183fd;
+    color: #f5f5f5;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    border-radius: 30px;
+}
+
+#configBtn:active {
+    background: #1b58ca;
 }
 
 #consoleBox {
@@ -601,17 +616,18 @@ input:checked+.switch-slider:before {
 }
 
 .btn-panel div {
-    width: 50px;
-    height: 50px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     background: #f5f5f5;
     position: absolute;
     text-align: center;
     transition: .3s;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
 }
 
 .btn-panel div:first-child {
-    display: block !important;
     z-index: 999;
 }
 
@@ -630,13 +646,7 @@ input:checked+.switch-slider:before {
     color: #a3a3a3;
     font-size: 28px;
     vertical-align: middle;
-    line-height: 50px;
-    transition: .1s;
-}
-
-.btn-panel div:nth-child(2) {
-    transform: translateX(150%);
-    opacity: 0;
+    line-height: 56px;
 }
 
 .showPanel .fa-bars {
@@ -647,10 +657,6 @@ input:checked+.switch-slider:before {
     opacity: 1;
 }
 
-.showPanel div {
-    transition-timing-function: cubic-bezier(.26, .36, .05, 1.2);
-}
-
 .showPanel div:first-child i {
     color: #f5f5f5;
 }
@@ -658,6 +664,12 @@ input:checked+.switch-slider:before {
 .showPanel div:first-child {
     background: #707070;
     transform: scale(0.9);
+}
+
+.btn-panel div:nth-child(2) {
+    transform: translateX(150%);
+    opacity: 0;
+    pointer-events: none;
 }
 
 .showPanel div:nth-child(2) {
@@ -670,10 +682,12 @@ input:checked+.switch-slider:before {
 
 .showPanel div:nth-child(4) {
     transform: translateX(170%) translateY(170%);
+    transition: .4s;
 }
 
 .showPanel div:nth-child(5) {
     transform: translateY(230%);
+    transition: .5s;
 }
 
 .classList {
@@ -681,12 +695,14 @@ input:checked+.switch-slider:before {
     list-style: none;
     position: absolute;
     padding: 0;
-    left: 60px;
+    left: 70px;
     top: -30px;
     max-height: 0;
     opacity: 0;
-    overflow: hidden;
     transition: .3s;
+    overflow: hidden;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
 }
 
 .classList li {
@@ -713,6 +729,11 @@ input:checked+.switch-slider:before {
 .showList {
     opacity: 1;
     max-height: 400px;
+}
+
+.showArrow{
+    opacity: 1 !important;
+    pointer-events: all !important;
 }
 
 .search-panel {

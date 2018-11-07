@@ -23,15 +23,11 @@
 </head>
 
 <body>
-  <span id="refreshBtn" onclick='javascript:window.location.reload()'>重新整理</span>
+  <span id="refreshBtn" onclick='javascript:window.location.reload();'>重新整理</span>
   <div id="consoleBox"></div>
   <div id="location"><i class="fas fa-map-marker-alt"></i><span></span></div>
   <div class="radarContainer_left" id="radarContainer"></div>
-  <div class="search-panel">
-    <div><span>查詢地標</span><i class="fas fa-times"></i></div>
-    <div class="search-input"><i class="fas fa-search"></i><input id="searching" type="text" placeholder="建築名稱、大樓編號、行政單位"></div>
-    <div class="search-res"></div>
-  </div>
+
 
   <div class="btn-panel">
     <div><i class="fas fa-bars"></i><i class="fas fa-times"></i></div>
@@ -49,6 +45,11 @@
     </div>
     <div><i class="fas fa-search"></i></div>
     <div><i class="fas fa-cog"></i></div>
+  </div>
+  <div class="search-panel">
+    <div><span>查詢地標</span><i class="fas fa-times"></i></div>
+    <div class="search-input"><i class="fas fa-search"></i><input id="searching" type="text" placeholder="建築名稱、大樓編號、行政單位"></div>
+    <div class="search-res"></div>
   </div>
 
   <div id="menu">
@@ -73,7 +74,7 @@
       <div class="menu-setting menu-switch">
         <span>GPS準確度過低提示</span>
         <label class="switch">
-          <input id="setting-gps" type="checkbox" checked>
+          <input id="setting-gps" type="checkbox">
           <span class="switch-slider"></span>
         </label>
       </div>
@@ -86,34 +87,60 @@
       </div>
     </div>
 
-<div class="menu-section">
-  <div class="menu-setting">
-    <h1>UI縮放比例</h1>
-    <div class="slider-box">
-      <input type="range" min="60" max="150" value="100" class="slider" id="uiScale-slider">
-      <span id="uiScale-output"></span>
+    <div class="menu-section">
+      <div class="menu-setting">
+        <h1>地標最大繪製距離</h1>
+        <div class="slider-box">
+          <input type="range" min="100" max="500" value="250" class="slider" id="maxDistance-slider">
+          <span id="maxDistance-output"></span>
+        </div>
+      </div>
+
+      <div class="menu-setting">
+        <h1>地標最小繪製距離</h1>
+        <div class="slider-box">
+          <input type="range" min="5" max="50" value="10" class="slider" id="minDistance-slider">
+          <span id="minDistance-output"></span>
+        </div>
+      </div>
+
+      <div class="menu-setting">
+        <h1>地標縮放大小</h1>
+        <div class="slider-box">
+          <input type="range" min="0" max="1" step="0.1" class="slider" id="markerScale-slider">
+          <span id="markerScale-output"></span>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-<div class="menu-section">
-  <div class="menu-setting">
-    <h1>地標縮放大小</h1>
-    <div class="slider-box">
-      <input type="range" min="1" max="5" value="2" class="slider" id="markerScale-slider">
-      <span id="markerScale-output"></span>
+
+    <div class="menu-section">
+      <div class="menu-setting">
+        <h1>bubbleAngle</h1>
+        <div class="slider-box">
+          <input type="range" min="1" max="100" value="10" class="slider" id="bubbleAngle-slider">
+          <span id="bubbleAngle-output"></span>
+        </div>
+      </div>
+
+      <div class="menu-setting">
+        <h1>clusterAngle</h1>
+        <div class="slider-box">
+          <input type="range" min="1" max="100" value="30" class="slider" id="clusterAngle-slider">
+          <span id="clusterAngle-output"></span>
+        </div>
+      </div>
+
+      <div class="menu-setting">
+        <h1>垂直offset</h1>
+        <div class="slider-box">
+          <input type="range" min="1" max="50" value="5" class="slider" id="altOffset-slider">
+          <span id="altOffset-output"></span>
+        </div>
+      </div>
     </div>
+  <div id="configBtn">預設值</div>
   </div>
-</div>
-<div class="menu-section">
-  <div class="menu-setting">
-    <h1>地標進入範圍</h1>
-    <div class="slider-box">
-      <input type="range" min="10" max="50" value="15" class="slider" id="markerLocationDistance-slider">
-      <span id="markerLocationDistance-output"></span>
-    </div>
-  </div>
-</div>
-</div>
+
   <span id="bubble-notice">測試訊息</span>
 
 
@@ -2266,6 +2293,40 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div onclick="locked(this)">
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_42" class="side-card">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_42.jpg">
+      </div>
+      <div class="title">
+        <h1>盆洗室</h1>
+        <h2>Washing room</h2>
+      </div>
+      <h3>學生餐廳一樓</h3>
     </div>
     <div class="nav-btn">
       <div>

@@ -6,7 +6,7 @@ function Marker(poiData) {
     this.animationGroup_selected = null;
     this.poiData = poiData;
 
-    var markerLocation = new AR.GeoLocation(poiData.latitude, poiData.longitude, poiData.altitude);
+    var markerLocation = new AR.GeoLocation(poiData.lat, poiData.lon, poiData.altitude);
     var markerIcon = new AR.ImageResource("assets/poi_marker/" + poiData.id + ".png");
     var iconSize, labelSize, labelColor;
     poiData.color == null ? labelColor = "#9b9b9b" : labelColor = poiData.color;
@@ -115,13 +115,12 @@ function Marker(poiData) {
         var firstUserLocation = new AR.GeoLocation(poiData.userLat, poiData.userLon);
         if (!poiData.area) {
             poiData.area = [{
-                "lat": poiData.latitude,
-                "lon": poiData.longitude,
+                "lat": poiData.lat,
+                "lon": poiData.lon,
                 "radius": 30
             }];
             
         }
-        consoleWrite(poiData.area.length);
         for (var i = 0; i < poiData.area.length; i++) {
             var areaLocation = new AR.GeoLocation(poiData.area[i].lat, poiData.area[i].lon);
             this.actionRange.push(new AR.ActionRange(areaLocation, poiData.area[i].radius, {
