@@ -6,9 +6,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=0.8,maximum-scale=1.5">
   <script src="https://www.wikitude.com/libs/architect.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+  <script type="text/javascript" src="js/jcanvas.min.js"></script>
+
 
   <script type="text/javascript" src="js/front.js"></script>
   <script type="text/javascript" src="js/poiData.js"></script>
+  <script type="text/javascript" src="js/map.js"></script>
   <script type=" text/javascript" src="js/marker.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="js/hammer.min.js"></script>
@@ -16,14 +19,28 @@
   <script type="text/javascript" src="js/clustering.js"></script>
   <script type="text/javascript" src="js/countUp.js"></script>
   <script type="text/javascript" src="js/radar.js"></script>
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
     crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="css/remove.css">
   <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 
 <body>
-  <!--<span id="refreshBtn" onclick='javascript:window.location.reload();'>重新整理</span>-->
+  <span id="refreshBtn" onclick='javascript:window.location.reload();'>重新整理</span>
+  <div id="flatmap">
+    <div id="flatmapContainer">
+      <canvas id="myCanvas" width="4800" height="2748">
+        <p>这里放一些备用的内容，因为有些浏览器不支持 Canvas </p>
+      </canvas>
+      <canvas id="myCanvas2" width="4800" height="2748">
+        <p>这里放一些备用的内容，因为有些浏览器不支持 Canvas </p>
+      </canvas>
+      <div id="user-location"></div>
+      <div id="target-location"></div>
+    </div>
+  </div>
+
   <div id="consoleBox"></div>
   <div id="location"><i class="fas fa-map-marker-alt"></i><span></span></div>
   <div class="radarContainer_left" id="radarContainer"></div>
@@ -46,6 +63,14 @@
     <div><i class="fas fa-search"></i></div>
     <div><i class="fas fa-cog"></i></div>
   </div>
+
+  <div class="mode-panel">
+    <div><i class="fas fa-map-marked-alt"></i><i class="fas fa-vr-cardboard"></i></div>
+    <div><i class="fas fa-crosshairs"></i></div>
+    <div><i class="fas fa-minus"></i></div>
+    <div><i class="fas fa-plus"></i></div>
+  </div>
+
   <div class="search-panel">
     <div><span>查詢地標</span><i class="fas fa-times"></i></div>
     <div class="search-input"><i class="fas fa-search"></i><input id="searching" type="text" placeholder="建築名稱、大樓編號、行政單位"></div>
@@ -280,7 +305,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -428,7 +453,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -601,7 +626,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -760,7 +785,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -840,7 +865,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -914,7 +939,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -1034,7 +1059,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -1146,7 +1171,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -1243,7 +1268,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -1343,7 +1368,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -1457,7 +1482,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -1528,7 +1553,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -1637,7 +1662,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -1758,7 +1783,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -1854,7 +1879,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -1971,7 +1996,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2061,7 +2086,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2191,7 +2216,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2245,7 +2270,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2301,7 +2326,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2335,7 +2360,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2369,7 +2394,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2403,7 +2428,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2451,7 +2476,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2503,7 +2528,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2537,7 +2562,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2571,7 +2596,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2605,7 +2630,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2637,7 +2662,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2669,7 +2694,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2701,7 +2726,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2733,7 +2758,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2764,7 +2789,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2795,7 +2820,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2826,7 +2851,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2860,7 +2885,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2894,7 +2919,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
@@ -2928,7 +2953,7 @@
           <p>更多資訊</p>
         </span>
       </div>
-      <div onclick="locked(this)">
+      <div>
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>

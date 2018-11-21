@@ -9,6 +9,8 @@ var World = {
     currentClassMarker: null,
     clusterAngle: 0,
     altOffset: 0,
+    flatMode:false,
+    isNavigation:false,
 
     loadPoisFromJsonData: function loadPoisFromJsonDataFn(lat, lon) {
         World.markerList = [];
@@ -47,6 +49,10 @@ var World = {
 
     updateDistance: function updateDistanceFn(lat, lon, alt, acc) {
         updateLocationAccuracy(acc);
+        drawUserLocation(lat, lon);
+        consoleWrite(World.flatMode);
+        if(World.flatMode)return;
+        
         for (var i = 0; i < World.markerList.length; i++) {
             var distance = World.markerList[i].markerObject.locations[0].distanceToUser();
             var distanceToUserValue = (distance > 999) ? ((distance / 1000).toFixed(2) + " km") : (Math.round(distance) + " m");
@@ -56,7 +62,7 @@ var World = {
 
 
         var poiWait2Sort = ClusterHelper.createClusteredPlaces(this.clusterAngle, { 'lat': lat, 'lon': lon }, this.currentClassMarker);
-        consoleWrite("b: " + bubbleAngle + " c: " + this.clusterAngle + " offset: " + this.altOffset);
+        //consoleWrite("b: " + bubbleAngle + " c: " + this.clusterAngle + " offset: " + this.altOffset);
         for (var i = 0; i < poiWait2Sort.length; i++) {
             if (poiWait2Sort[i].type == "cluster") {
 
@@ -103,12 +109,14 @@ var World = {
                 showSearchPanel(false);
                 if (World.markerList[i].poiData.id == id) {
                     showBubble("開始指引 " + World.markerList[i].poiData.title);
+                    World.markerList[i].markerObject.enabled = true;
                     World.markerList[i].directionIndi.enabled = true;
                 } else World.markerList[i].markerObject.enabled = false;
             }
-            else {
-                if (World.markerList[i].poiData.id == id) World.markerList[i].directionIndi.enabled = false;
-                if (World.markerList[i].poiData.class == this.currentClassMarker[0].class) World.markerList[i].markerObject.enabled = true;
+            else if (World.markerList[i].poiData.id == id) {
+                World.markerList[i].directionIndi.enabled = false;
+                World.onMarkerClassFilter(this.currentClassMarker[0].class);
+                return;
             }
         }
     },
@@ -116,7 +124,9 @@ var World = {
     onLocationArea: function onLocationAreaFn(title, hide) {
         for (var i = 0; i < World.markerList.length; i++) {
             if (World.markerList[i].poiData.title == title) {
-                hide ? World.markerList[i].markerObject.enabled = false : World.markerList[i].markerObject.enabled = true;
+                if(hide){
+                    World.markerList[i].markerObject.enabled = false;
+                }else if(this.currentClassMarker[0].class == World.markerList[i].poiData.class)World.markerList[i].markerObject.enabled = true;
             }
         }
     },
@@ -159,6 +169,7 @@ var World = {
         }
     },
 
+
     setMaxScalingDistance: function (value) {
         AR.context.scene.maxScalingDistance = value;
     },
@@ -172,4 +183,3 @@ var World = {
 };
 AR.context.onLocationChanged = World.locationChanged;
 AR.context.onScreenClick = World.onScreenClick;
-AR.context.openInBrowser("https://www.w3schools.com/html/html5_geolocation.asp", 1);
