@@ -87,9 +87,14 @@ body {
     display: block;
 }
 
-#myCanvas2 {
+#pathCanvas {
+    pointer-events: none;
     position: absolute;
     top: 0;
+}
+
+map area {
+    outline: none;
 }
 
 #user-location {
@@ -146,15 +151,76 @@ body {
     top: -75px;
     z-index: -2;
     position: absolute;
-    background-image: url('../assets/sidbg.png');
+    background-image: url('../assets/cardBG/sidbg.png');
     background-size: 140% 340px;
     background-repeat: no-repeat;
 }
 
 .spec-card::before {
-    background-image: url('../assets/sidbg2.png') !important;
+    background-image: url('../assets/cardBG/sidbg2.png') !important;
     background-size: 140% 130px !important;
     background-repeat: repeat-y !important;
+}
+
+.sc0::before {
+    background-image: url('../assets/cardBG/sidbg3.jpg') !important;
+    background-size: 100% !important;
+    background-repeat: no-repeat !important;
+}
+.sc1::before {
+    background-image: url('../assets/cardBG/sidbg4.jpg') !important;
+    background-size: 100% !important;
+    background-repeat: no-repeat !important;
+}
+.sc2::before {
+    background-image: url('../assets/cardBG/sidbg5.jpg') !important;
+    background-size: 100% !important;
+    background-repeat: no-repeat !important;
+}
+.sc3::before {
+    background-image: url('../assets/cardBG/sidbg6.jpg') !important;
+    background-size: 100% !important;
+    background-repeat: no-repeat !important;
+}
+.sc4::before {
+    background-image: url('../assets/cardBG/sidbg7.jpg') !important;
+    background-size: 100% !important;
+    background-repeat: no-repeat !important;
+}
+.sc5::before {
+    background-image: url('../assets/cardBG/sidbg8.jpg') !important;
+    background-size: 100% !important;
+    background-repeat: no-repeat !important;
+}
+.sc6::before {
+    background-image: url('../assets/cardBG/sidbg9.jpg') !important;
+    background-size: 100% !important;
+    background-repeat: no-repeat !important;
+}
+.sc7::before {
+    background-image: url('../assets/cardBG/sidbg10.jpg') !important;
+    background-size: 100% !important;
+    background-repeat: no-repeat !important;
+}
+.sc8::before {
+    background-image: url('../assets/cardBG/sidbg11.jpg') !important;
+    background-size: 100% !important;
+    background-repeat: no-repeat !important;
+}
+.sc9::before {
+    background-image: url('../assets/cardBG/sidbg12.jpg') !important;
+    background-size: 100% !important;
+    background-repeat: no-repeat !important;
+}
+.sc10::before {
+    background-image: url('../assets/cardBG/sidbg13.jpg') !important;
+    background-size: 100% !important;
+    background-repeat: no-repeat !important;
+}
+.sc11::before {
+    background-image: url('../assets/cardBG/sidbg14.jpg') !important;
+    background-size: 100% !important;
+    background-repeat: no-repeat !important;
 }
 
 .side-card::after {
@@ -412,7 +478,8 @@ body {
     left: 0;
     transition: .3s;
     height: 100vh;
-    width: 373px;
+    max-width: 35vw;
+    min-width: 380px;
     background: #f5f5f5;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -450,7 +517,7 @@ body {
     transform: translateZ(1000px) translateY(-30px);
 }
 
-#gps-acc {
+#gps-dashboard {
     width: 180px;
     height: 180px;
     border: 2px solid #f5f5f5;
@@ -464,22 +531,22 @@ body {
     position: relative;
 }
 
-#gps-acc p {
+#gps-dashboard p {
     font-size: 14px;
     position: absolute;
     line-height: normal;
     margin: 0 auto;
     left: 0;
     right: 0;
-    bottom: 20px;
+    top: -40px;
 }
 
-#gps-acc p:first-of-type {
+#gps-dashboard p:first-of-type {
     top: 15px;
     font-size: 18px;
 }
 
-#gps-acc::before {
+#gps-dashboard::before {
     content: "";
     width: 180px;
     height: 180px;
@@ -494,8 +561,17 @@ body {
     animation-iteration-count: infinite;
 }
 
-#acc {
+.gps-acc {
     text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+.gps-acc span{
+    position: absolute;
+    top: 55px;
+    font-size: 20px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
 }
 
 .acc-warning {
@@ -506,7 +582,7 @@ body {
     background: #ff685d !important;
 }
 
-.acc-danger~#gps-acc::before {
+.acc-danger~#gps-dashboard::before {
     animation-play-state: running !important;
     display: block !important;
 }
@@ -688,12 +764,18 @@ input:checked+.switch-slider:before {
     transform-style: preserve-3d;
 }
 
-.mode-panel div{
+.mode-panel div {
     opacity: 0;
     transition: .3s;
 }
+
 .mode-panel div:nth-child(1) i {
     transition: .3s;
+}
+
+.mode-panel div:nth-child(5) {
+    pointer-events: none;
+    opacity: 0;
 }
 
 .switchMode div,
@@ -728,9 +810,13 @@ input:checked+.switch-slider:before {
     line-height: 55px;
 }
 
-.switchMode,.switchMode div {
+.switchMode {
     opacity: 1 !important;
     pointer-events: all !important;
+}
+
+.switchMode div {
+    opacity: 1;
 }
 
 .showPanel div {
@@ -754,11 +840,17 @@ input:checked+.switch-slider:before {
 .switchMode div:nth-child(2) {
     transform: translateY(-130%);
 }
+
 .switchMode div:nth-child(3) {
     transform: translateY(-260%);
 }
+
 .switchMode div:nth-child(4) {
     transform: translateY(-390%);
+}
+
+.switchMode div:nth-child(5) {
+    transform: translateY(-520%);
 }
 
 .showPanel div:first-child {
@@ -771,11 +863,6 @@ input:checked+.switch-slider:before {
     transition: .3s;
     opacity: 0;
     pointer-events: none;
-}
-
-.btn-panel div:nth-child(6) {
-    right: 20px;
-    bottom: 20px;
 }
 
 .showPanel div:nth-child(2) {
@@ -837,10 +924,11 @@ input:checked+.switch-slider:before {
     max-height: 400px;
 }
 
-.showArrow {
+.showArrow,
+.showRoute {
     opacity: 1 !important;
     pointer-events: all !important;
-    box-shadow: 1px 1px 16px -3px rgba(0, 0, 0, 0.42);
+    box-shadow: 1px 1px 16px -3px rgba(0, 0, 0, 0.4);
 }
 
 .search-panel {
@@ -1042,4 +1130,158 @@ mark {
     body {
         background-image: none;
     }
+}
+
+.spinner {
+    width: 70px;
+    top: 50%;
+    position: absolute;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    display: none;
+    z-index: 9999;
+  }
+  
+  .spinner > div {
+    width: 12px;
+    height: 12px;
+    background-color: #f5f5f5;
+  
+    border-radius: 100%;
+    display: inline-block;
+    -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+    animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  }
+  
+  .spinner .bounce1 {
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+  }
+  
+  .spinner .bounce2 {
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+  }
+  
+  @-webkit-keyframes sk-bouncedelay {
+    0%, 80%, 100% { -webkit-transform: scale(0) }
+    40% { -webkit-transform: scale(1.0) }
+  }
+  
+  @keyframes sk-bouncedelay {
+    0%, 80%, 100% { 
+      -webkit-transform: scale(0);
+      transform: scale(0);
+    } 40% { 
+      -webkit-transform: scale(1.0);
+      transform: scale(1.0);
+    }
+  }
+
+.stick {
+    position: absolute;
+    width: 80vw;
+    border-radius: 186px;
+    height: 45px;
+    background: #69b0ff;
+    transform: rotate(-45deg);
+    box-shadow: 0 4px 7px -3px rgba(51, 51, 51, 0.6);
+    transform-origin: center;
+}
+
+.stickThinL {
+    width: 220px;
+    height: 10px;
+}
+
+.stickThinS {
+    width: 110px;
+    height: 10px;
+}
+
+.stick1 {
+    background: #ff8784;
+    height: 70px;
+}
+
+.stick2 {
+    background: #ff8784;
+}
+
+.stick3 {
+    background: #b2b4b7;
+}
+
+.stick4 {
+    background: #69b0ff;
+}
+
+.stick5 {
+    background: #69b0ff;
+}
+.stick6 {
+    background: #ff8784;
+}
+.stick7 {
+    background: #69b0ff;
+}
+.stick8 {
+    background: #b2b4b7;
+}
+.stick9 {
+    background: #69b0ff;
+}
+.stick10 {
+    background: #ff8784;
+}
+.stick11 {
+    background: #ff8784;
+}
+.footer{
+    width: 100%;
+    background: #4285f4;
+    bottom: 0;
+    padding: 10px 0;
+    position: absolute;
+    text-align: center;
+    color: #f5f5f5;
+    letter-spacing: 8px;
+}
+
+.square {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    right: 0;
+    left: 0;
+    background: #4577d5;
+    transform: rotate(45deg);
+    z-index: 99;
+}
+.squareLine{
+    border: 1px solid #f5f5f5;
+    width: 180px;
+    height: 180px;
+    z-index: 999;
+}
+
+#loading-mask,#loading-white {
+    position: fixed;
+    z-index: 99999;
+    background: #f5f5f5;
+    width: 100vw;
+    height: 100vh;
+}
+
+#loading-mask h1 {
+    position: absolute;
+    top: 40%;
+    text-align: center;
+    left: 0;
+    right: 0;
+    color: #f5f5f5;
+    z-index: 9999;
 }

@@ -13,6 +13,7 @@ function Marker(poiData) {
     switch (poiData.class) {
         case 0:
         case 5:
+        case 6:
             iconSize = 2;
             labelSize = 0.6;
             this.labelX = 1.5;
@@ -43,14 +44,6 @@ function Marker(poiData) {
             this.labelY = -0.7;
             this.labelTriggerX = 0;
             this.labelTriggerY = -0.9;
-            break;
-        case 6:
-            iconSize = 1.8;
-            labelSize = 0.6;
-            this.labelX = 0;
-            this.labelY = -0.5;
-            this.labelTriggerX = 0;
-            this.labelTriggerY = -0.6;
             break;
         default:
             iconSize = 2;

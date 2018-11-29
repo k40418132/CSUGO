@@ -11,6 +11,7 @@ var World = {
     altOffset: 0,
     flatMode:false,
     isNavigation:false,
+    isRuninApp: false,
 
     loadPoisFromJsonData: function loadPoisFromJsonDataFn(lat, lon) {
         World.markerList = [];
@@ -36,21 +37,23 @@ var World = {
         World.onMarkerClassFilter(0);
         consoleWrite(i + " 地標載入完畢");
         showBubble(i + " 個地標成功載入");
+        $('#loading-mask').fadeOut(1500);
     },
 
     locationChanged: function locationChangedFn(lat, lon, alt, acc) {
 
         if (!World.initiallyLoadedData) {
-            World.loadPoisFromJsonData(lat, lon);
+            setTimeout(function(){
+                World.loadPoisFromJsonData(lat, lon);
+            },5000);
             World.initiallyLoadedData = true;
         }
         World.updateDistance(lat, lon, alt, acc);
     },
 
     updateDistance: function updateDistanceFn(lat, lon, alt, acc) {
-        updateLocationAccuracy(acc);
+        if (!this.isRuninApp) updateLocationAccuracy(acc,false);
         drawUserLocation(lat, lon);
-        consoleWrite(World.flatMode);
         if(World.flatMode)return;
         
         for (var i = 0; i < World.markerList.length; i++) {
@@ -78,7 +81,7 @@ var World = {
             } else {
                 for (var m = 0; m < World.markerList.length; m++) {
                     if (World.markerList[m].poiData.id == poiWait2Sort[i].places[0].id) {
-                        World.markerList[m].markerObject.locations[0].altitude = alt - 5;
+                        World.markerList[m].markerObject.locations[0].altitude = alt - 10;
                     }
                 }
             }

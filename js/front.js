@@ -6,8 +6,10 @@ function showCard(show, id) {
   if (show) {
     $("#" + id).animate({ scrollTop: 0 }, 100);
     (screenOrientation) ? $("#" + id).css('transform', 'translateX(-50%) translateY(0%)') : $("#" + id).css('transform', 'translateX(0)')
+    $("#" + id).addClass("Showed");
   } else {
     (screenOrientation) ? $("#" + id).css('transform', 'translateX(-50%) translateY(100%)') : $("#" + id).css('transform', 'translateX(100%)')
+    $("#" + id).removeClass("Showed");
   }
 }
 function showCardDelay(id, delay) {
@@ -174,28 +176,36 @@ function keyWordInitial() {
 
 
 
-function updateLocationAccuracy(acc) {
-  /*var demo = new CountUp('acc', Number($("#acc").html()), acc, 0, 1);
+function updateLocationAccuracy(acc,inApp) {
+  if (inApp) {
+    World.isRuninApp = true;
+    $(".gps-acc span").html("公尺");
+  }else $(".gps-acc span").html("等級");
+  acc > 9 ? $(".gps-acc").addClass("spacingBalance") : $(".gps-acc").removeClass("spacingBalance");
+
+  var demo = new CountUp('acc', Number($("#acc").html()), acc, 0, 1);
   if (!demo.error) {
     demo.start();
   } else {
     console.error(demo.error);
-  }*/
-  $("#acc").html(acc);
-  if (acc == 1) {
+  }
+
+  if ((acc == 1 && !inApp) || acc > 25) {
     if ($("#setting-gps").prop('checked')) showBubble("GPS信號不穩定");
-    $("#gps-acc p:first").html("不穩定");
+    $("#gps-dashboard p:first").html("不穩定");
     $("#menu-nav").removeClass();
     $("#menu-nav").addClass("acc-danger");
-  } else if (acc == 2) {
-    $("#gps-acc p:first").html("良好");
+  } else if ((acc == 2 && !inApp) || acc > 12 && acc <= 25 ) {
+    $("#gps-dashboard p:first").html("良好");
     $("#menu-nav").removeClass();
     $("#menu-nav").addClass("acc-warning");
-  } else {
-    $("#gps-acc p:first").html("最佳");
+  } else if((acc == 1 && !inApp) || acc < 12 ) {
+    $("#gps-dashboard p:first").html("最佳");
     $("#menu-nav").removeClass();
   }
+  consoleWrite("Gps: "+acc);
 }
+
 
 /*function initLocationAccuracy() {
   if (navigator.geolocation) {
@@ -210,6 +220,41 @@ function updateLocationAccuracy(acc) {
 
 
 $(function () {
+  $(".square").css("top", $("#loading-mask h1").prop('offsetTop') - 80 + 'px');
+  $(".spinner").css("top", $("#loading-mask h1").prop('offsetTop') + 70 + 'px');
+  $(".squareLine").css("top", $("#loading-mask h1").prop('offsetTop') - 71 + 'px');
+  var offset = [[-50, -880], [-40, 240], [60, -4120], [-30, -2940], [30, 2100], [-170, 670], [100, -2150], [170, -2140], [-150, 1020], [160, -1740], [-270, -410], [-120, 2060]];
+  var offsetTop = $("#loading-mask").prop('clientHeight') / 2;
+  var offsetWidth = $("#loading-mask").prop('clientWidth') / 2;
+  $(".stick").each(function (i) {
+    $(this).css({
+      'transform': 'translate(' + offset[i][0] + '%,' + offset[i][1] + '%) rotate(-45deg)',
+      'top': offsetTop + 'px',
+      'left': offsetWidth + 'px'
+    })
+  })
+  console.log(offsetTop + "," + offsetWidth);
+  setTimeout(function () {
+    $("#loading-white").fadeOut(500);
+    $(".spinner").delay(2000).fadeIn(300);
+  }, 1000);
+
+  setTimeout('InitPart1()',5000);
+})
+
+function InitPart1(){
+
+  
+
+  $("area").click(function (e) {
+    e.preventDefault();
+    var id = $(this).attr('title');
+    $(".side-card.Showed").each(function () { 
+      if(id != $(this).attr('id'))showCard(0, $(this).attr('id'));     
+    });
+    $("#" + id).hasClass("Showed") ? showCard(0, id) : showCard(1, id);
+  })
+
   $(".nav-btn .fa-map-marked-alt").parent().parent().click(function () {
     var id = $(this).parents(".side-card").attr('id');
     if (id == World.currentLocation) {
@@ -221,11 +266,36 @@ $(function () {
       $(".mode-panel").toggleClass('switchMode');
       World.flatMode = true;
     }
-    routeNavigation($(this));
+    var $div = $(this);
+    setTimeout(function(){
+      routeNavigation($div);
+      $("#target-location").show();
+      $(".mode-panel").hasClass('switchMode') ? AR.hardware.camera.enabled = false : AR.hardware.camera.enabled = true;
+    },1000);
+    $(".fa-route").parent().addClass("showRoute");
     World.onScreenClick();
+    $(".Showed").each(function(){showCard(0,$(this).attr('id'))});
     showSearchPanel(false);
     $(".classList").removeClass("showList");
-    $(".mode-panel").hasClass('switchMode') ? AR.hardware.camera.enabled = false : AR.hardware.camera.enabled = true;
+    $(".mode-panel .fa-crosshairs").parent().click();
+    
+  })
+
+  $(".mode-panel .fa-route").parent().click(function(){
+    showBubble("取消路線引導");
+    $(this).removeClass("showRoute");
+    cancelRoute();
+  })
+
+  $(".side-card").each(function(i){
+    if(!poiData[i].url){
+      $(this).find(".fa-ellipsis-h").parent().parent().hide();
+    }
+  })
+
+  $(".nav-btn .fa-ellipsis-h").parent().parent().click(function(){
+    var url = poiData[$('.side-card').index($(this).parents(".side-card"))].url
+    AR.context.openInBrowser(url,true);
   })
 
   $(".nav-btn .fa-location-arrow").parent().parent().click(function(){
@@ -236,19 +306,25 @@ $(function () {
   });
 
   $(".mode-panel .fa-minus").parent().click(function () {
-    console.log(displayImageScale);
     displayImageCurrentScale = clampScale(displayImageScale - 0.1);
     updateRange();
+    displayImageCurrentX = clamp(displayImageX, rangeMinX, rangeMaxX);
+    displayImageCurrentY = clamp(displayImageY, rangeMinY, rangeMaxY);
     updateDisplayImage(displayImageCurrentX, displayImageCurrentY, displayImageCurrentScale);
     displayImageScale = displayImageCurrentScale;
+    displayImageX = displayImageCurrentX;
+    displayImageY = displayImageCurrentY;
   })
 
   $(".mode-panel .fa-plus").parent().click(function () {
-    console.log(displayImageScale);
     displayImageCurrentScale = clampScale(displayImageScale + 0.1);
     updateRange();
+    displayImageCurrentX = clamp(displayImageX, rangeMinX, rangeMaxX);
+    displayImageCurrentY = clamp(displayImageY, rangeMinY, rangeMaxY);
     updateDisplayImage(displayImageCurrentX, displayImageCurrentY, displayImageCurrentScale);
     displayImageScale = displayImageCurrentScale;
+    displayImageX = displayImageCurrentX;
+    displayImageY = displayImageCurrentY;
   })
 
   $(".mode-panel .fa-crosshairs").parent().click(function () {
@@ -302,6 +378,7 @@ $(function () {
     $(this).addClass("listChecked");
     $(this).siblings().removeClass();
     $(".btn-panel").removeClass("showPanel");
+    showBubble("分類切換為<b>"+$(this).html()+"</b>");
     World.onMarkerClassFilter($(".classList li").index(this));
   })
 
@@ -332,8 +409,9 @@ $(function () {
           var lastIndex = ky.lastIndexOf(",", index) + 1;
           var matchWord = ky.substr(lastIndex, ky.indexOf(",", index) - lastIndex);
           matchWord = matchWord.replace(serchKy, "<mark>" + serchKy + "</mark>");
+          var imgID = (i + 1 > 26 && i + 1 < 35) || (i + 1 > 42 && i + 1 < 62) ? "poi_27" : poiData[i].id;
           var a = $("<table class='search-card' id='res_" + poiData[i].id + "' onclick='World.onSearchPanelPoiClick(" + '"' + poiData[i].id + '"' + ")'></table>");
-          var b = $("<td rowspan='2'><div class='circle-img circle-small'><img src='assets/poi_img/" + poiData[i].id + ".jpg'></div></td>");
+          var b = $("<td rowspan='2'><div class='circle-img circle-small'><img src='assets/poi_img/" + imgID + ".jpg'></div></td>");
           var c = $("<td>" + matchWord + "</td>");
           var d = $("<td rowspan='2'>" + World.onPoiGetDistance(poiData[i].id) + "</td>");
           var e = $("<tr></tr>").append(b).append(c).append(d);
@@ -349,12 +427,12 @@ $(function () {
   $("#configBtn").click(function () {
     $("#setting-radar").prop('checked', 1).trigger('change');
     $("#setting-gps").prop('checked', 1).trigger('change');
-    $("#maxDistance-slider").val(120).trigger("input");
-    $("#minDistance-slider").val(10).trigger("input");
-    $("#markerScale-slider").val(0.3).trigger("input");
+    $("#maxDistance-slider").val(420).trigger("input");
+    $("#minDistance-slider").val(8).trigger("input");
+    $("#markerScale-slider").val(0.2).trigger("input");
     $("#bubbleAngle-slider").val(10).trigger("input");
     $("#clusterAngle-slider").val(30).trigger("input");
-    $("#altOffset-slider").val(30).trigger("input");
+    $("#altOffset-slider").val(15).trigger("input");
   });
 
   $("#maxDistance-slider").on('input', function () {
@@ -396,8 +474,6 @@ $(function () {
       if (ev.direction == 4 && !screenOrientation) {
         World.onScreenClick();
       } else if (ev.direction == 16 && screenOrientation) World.onScreenClick();
-      console.log(ev.direction + "  " + screenOrientation);
-
     }
   });
   hammer.get('swipe').set({ threshold: 150, direction: Hammer.DIRECTION_ALL });
@@ -438,8 +514,6 @@ $(function () {
     }, 30);
   });
   //localStorage.clear();
-  lastX = 0, lastY = 0, lastScale = 1;
-  isDragging = false;
   screenOrientation = false;
   bubbleNoticePool = [];
   onOrientationchange();
@@ -454,25 +528,17 @@ $(function () {
   configProgress(0);
 
   //FastClick.attach(document.body);
+  InitPart2();
 
-
-});
+}
 
 
 function canvasInit() {
   mapTransform();
-  var $myCanvas = $('#myCanvas');
-  $myCanvas.drawImage({
-    source: 'assets/csumap.png',
-    x: 0, y: 0,
-    fromCenter: false,
-    width: 4800, height: 2748
-  });
-  var canvas = document.getElementById("myCanvas2");
+  /*var canvas = document.getElementById("pathCanvas");
   canvas.addEventListener('click', function (evt) {
     var mousePos = getMousePos(canvas, evt);
-    console.log(mousePos.x + "," + mousePos.y);
-  }, false);
+  }, false);*/
 }
 function getMousePos(c, evt) {
   var rect = c.getBoundingClientRect();
@@ -487,7 +553,7 @@ function Map_drawAllPoint() {
   var cood;
   for (var i = 0; i < matrixLocation.length; i++) {
     cood = Location2Pixel(matrixLocation[i][0], matrixLocation[i][1]);
-    $('#myCanvas2').drawArc({
+    $('#pathCanvas').drawArc({
       fillStyle: 'red',
       x: cood.x, y: cood.y,
       radius: 5,
@@ -501,8 +567,8 @@ function Map_drawAllPoint() {
 
 function drawUserLocation(lat, lon) {
   var cood = Location2Pixel(lat, lon);
-  /*$('#myCanvas2').clearCanvas()
-  $('#myCanvas2').drawArc({
+  /*$('#pathCanvas').clearCanvas()*/
+  /*$('#pathCanvas').drawArc({
     fillStyle: 'red',
     x: cood.x, y: cood.y,
     radius: 5,
@@ -521,7 +587,6 @@ function Location2Pixel(lat, lon) {
 }
 
 function drawPath(path) {
-
   var coordinate = [[userCoordinate.x, userCoordinate.y]];
   for (var i = 0; i < path.length; i++) {
     var lat = matrixLocation[path[i]][0];
@@ -530,9 +595,8 @@ function drawPath(path) {
     coordinate[i + 1] = new Array;
     coordinate[i + 1][0] = cood.x;
     coordinate[i + 1][1] = cood.y;
-    console.log(coordinate[i]);
   }
-  $('#myCanvas2').clearCanvas();
+  $('#pathCanvas').clearCanvas();
   $('#target-location').css('transform', 'translate(' + coordinate[coordinate.length - 1][0] + 'px,' + coordinate[coordinate.length - 1][1] + 'px)');
   
   var obj = {
@@ -545,18 +609,19 @@ function drawPath(path) {
     obj['x' + (p + 1)] = coordinate[p][0];
     obj['y' + (p + 1)] = coordinate[p][1];
   }
-  console.log(obj);
 
-  $('#myCanvas2').drawLine(obj);
+
+  $('#pathCanvas').drawLine(obj);
+
   for (var p = 0; p < coordinate.length; p += 1) {
-    $('#myCanvas2').drawArc({
+    $('#pathCanvas').drawArc({
       fillStyle: 'white',
       x: coordinate[p][0], y: coordinate[p][1],
-      radius: 5,
+      radius: 3,
       start: 0, end: 360,
     });
   }
-
+  console.log("draw");
 }
 var GlobalPath = new Array;
 var updateRouteTimer;
@@ -586,9 +651,10 @@ let displayImageRangeY = 0;
 let displayImageCurrentX = 0;
 let displayImageCurrentY = 0;
 let displayImageCurrentScale = 1;
+let isPanning = false;
 
 
-$(function () {
+function InitPart2(){
   imageContainer = document.querySelector('#flatmap');
   displayImage = document.querySelector('#flatmapContainer');
   resizeContainer();
@@ -620,6 +686,11 @@ $(function () {
     displayImageCurrentX = clamp(displayImageX + ev.deltaX, rangeMinX, rangeMaxX);
     displayImageCurrentY = clamp(displayImageY + ev.deltaY, rangeMinY, rangeMaxY);
     updateDisplayImage(displayImageCurrentX, displayImageCurrentY, displayImageScale);
+    isPanning = true;
+  });
+  hammertime.on('tap', ev => {
+    $(".side-card").css('transform', '');
+    $(".side-card.Showed").removeClass('Showed');
   });
 
   /*hammertime.on('pinch pinchmove', ev => {
@@ -634,10 +705,9 @@ $(function () {
     displayImageScale = displayImageCurrentScale;
     displayImageX = displayImageCurrentX;
     displayImageY = displayImageCurrentY;
+    isPanning = false;
   });
-
-
-})
+}
 
 function resizeContainer() {
   containerWidth = imageContainer.offsetWidth;
@@ -802,6 +872,7 @@ function arrayMin(arrs) {
 }
 
 function updateRoute(){
+  if(isPanning)return;
   var minDistance = Infinity;
   var tmp;
   var nearbyPoint;
@@ -817,4 +888,14 @@ function updateRoute(){
     GlobalPath.shift();
   }
   drawPath(GlobalPath);
+  if(GlobalPath.length==1 && minDistance < 10){
+   cancelRoute();
+   showBubble("到達目的地!"); 
+  }
+}
+
+function cancelRoute(){
+  $('#pathCanvas').clearCanvas();
+  $('#target-location').hide();
+  clearInterval(updateRouteTimer);
 }

@@ -27,19 +27,88 @@
 </head>
 
 <body>
-  <span id="refreshBtn" onclick='javascript:window.location.reload();'>重新整理</span>
+  <div id="loading-mask">
+    <div id="loading-white"></div>
+    <img src="assets/marker.png">
+    <h1>正修導航Go</h1>
+    <div class="square"></div>
+    <div class="square squareLine"></div>
+    <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+      </div>
+      <div class="stick stick0"></div>
+      <div class="stick stick1"></div>
+      <div class="stick stick2 stickThinL"></div>
+      <div class="stick stick3 stickThinL"></div>
+      <div class="stick stick4 stickThinL"></div>
+      <div class="stick stick5 stickThinL"></div>
+      <div class="stick stick6 stickThinL"></div>
+      <div class="stick stick7 stickThinS"></div>
+      <div class="stick stick8 stickThinS"></div>
+      <div class="stick stick9 stickThinS"></div>
+      <div class="stick stick10 stickThinS"></div>
+      <div class="stick stick11 stickThinS"></div>
+      <div class="footer">
+        <div><h2>CSUGO</h2>
+        <p>為迅速認識正修而生</p></div>
+      </div>
+  </div>
+  <!--<span id="refreshBtn" onclick='javascript:window.location.reload();'>重新整理</span>-->
   <div id="flatmap">
     <div id="flatmapContainer">
-      <canvas id="myCanvas" width="4800" height="2748">
-        <p>这里放一些备用的内容，因为有些浏览器不支持 Canvas </p>
-      </canvas>
-      <canvas id="myCanvas2" width="4800" height="2748">
+      <img id="csumap" src="assets/csumap.png" usemap="#image-map">
+
+      <canvas id="pathCanvas" width="4800" height="2748">
         <p>这里放一些备用的内容，因为有些浏览器不支持 Canvas </p>
       </canvas>
       <div id="user-location"></div>
       <div id="target-location"></div>
     </div>
   </div>
+
+
+  <map name="image-map">
+    <area target="" alt="area_3" title="poi_3" href="" coords="1088,2211,1500,2168,1906,2126,1902,2028,1661,2054,1631,2002,1351,2024,1317,2065,1071,2101,1080,2159"
+      shape="poly">
+    <area target="" alt="area_5" title="poi_5" href="" coords="1368,1778,1385,1965,1572,1948,1555,1804,1487,1804,1470,1766"
+      shape="poly">
+    <area target="" alt="area_8" title="poi_8" href="" coords="1682,1801,1822,1784,1835,1962,1703,1979,1695,1894" shape="poly">
+    <area target="" alt="area_18" title="poi_18" href="" coords="1657,1684,1784,1662,1919,1616,1936,1535,1877,1552,1771,1556,1657,1569,1601,1556,1534,1565,1534,1641,1614,1628"
+      shape="poly">
+    <area target="" alt="area_12" title="poi_12" href="" coords="1368,1658,1453,1650,1445,1595,1360,1603" shape="poly">
+    <area target="" alt="area_7" title="poi_7" href="" coords="1241,1684,1059,1701,1046,1565,1233,1552,1313,1544,1322,1650,1245,1654"
+      shape="poly">
+    <area target="" alt="area_9" title="poi_9" href="" coords="1177,1726,1114,1730,1148,2027,1211,2019,1199,1917,1249,1917,1241,1832,1186,1836"
+      shape="poly">
+    <area target="" alt="area_6" title="poi_6" href="" coords="1071,2036,970,2053,970,1989,987,1790,1037,1790" shape="poly">
+    <area target="" alt="area_10" title="poi_10" href="" coords="2225,1679,2302,1603,2505,1556,2568,1679,2564,1751,2369,1790,2318,1824,2254,1773"
+      shape="poly">
+    <area target="" alt="area_11" title="poi_11" href="" coords="2428,1842,2530,1842,2534,1812,2640,1809,2645,1838,2725,1838,2729,1914,2428,1918"
+      shape="poly">
+    <area target="" alt="area_13" title="poi_13" href="" coords="2742,1744,2742,1660,2886,1651,2933,1570,2980,1592,2988,1554,3081,1592,3018,1736,2958,1719,2933,1744"
+      shape="poly">
+    <area target="" alt="area_4" title="poi_4" href="" coords="2742,2132,2751,2289,2831,2284,2844,2462,2941,2462,2937,2386,2988,2378,2988,2250,2941,2233,2937,2123"
+      shape="poly">
+    <area target="" alt="area_45" title="poi_45" href="" coords="3175,1737,3259,1750,3251,1818,3289,1852,3378,1856,3361,2064,3289,2072,3234,2021,3221,1971,3166,1954"
+      shape="poly">
+    <area target="" alt="area_1" title="poi_1" href="" coords="2742,1146,2878,1163,2861,1261,2835,1350,2818,1435,2895,1495,3030,1515,3098,1490,3090,1405,3030,1372,2963,1312,2996,1091,2873,1074,2755,1057"
+      shape="poly">
+    <area target="" alt="area_2" title="poi_2" href="" coords="2360,1161,2526,1178,2649,1114,2704,851,2598,809,2517,910,2386,1059"
+      shape="poly">
+    <area target="" alt="area_14" title="poi_14" href="" coords="2903,971,2827,967,2835,844,2789,840,2793,734,2848,742,2861,623,2937,628"
+      shape="poly">
+    <area target="" alt="area_16" title="poi_16" href="" coords="3149,930,3259,968,3323,888,3365,773,3387,671,3412,680,3514,400,3446,375,3336,633,3251,608,3221,710,3179,837"
+      shape="poly">
+    <area target="" alt="area_17" title="poi_17" href="" coords="3073,76,3013,106,3069,195,2920,293,2971,365,3175,221"
+      shape="poly">
+    <area target="" alt="area_15" title="poi_15" href="" coords="2958,975,3022,984,3081,645,3107,606,3395,382,3378,331,3429,305,3370,246,3310,288,3340,339,3069,556,3018,636"
+      shape="poly">
+    <area target="" alt="area_35" title="poi_35" href="" coords="1703,2462,1945,2462,1953,2246,1707,2255" shape="poly">
+    <area target="" alt="area_37" title="poi_37" href="" coords="1288,2455,944,2460,944,2248,1300,2260" shape="poly">
+    <area target="" alt="" title="poi_64" href="" coords="2445,1389,63" shape="circle">
+  </map>
 
   <div id="consoleBox"></div>
   <div id="location"><i class="fas fa-map-marker-alt"></i><span></span></div>
@@ -57,7 +126,7 @@
         <li>運動場地</li>
         <li>生活日常</li>
         <li>停車場</li>
-        <li>盥洗室</li>
+        <li>學術單位</li>
       </ul>
     </div>
     <div><i class="fas fa-search"></i></div>
@@ -69,6 +138,7 @@
     <div><i class="fas fa-crosshairs"></i></div>
     <div><i class="fas fa-minus"></i></div>
     <div><i class="fas fa-plus"></i></div>
+    <div><i class="fas fa-route"></i></div>
   </div>
 
   <div class="search-panel">
@@ -83,9 +153,15 @@
       <i class="fas fa-arrow-left" onclick="showMenu(false)"></i>
     </div>
 
-    <div id="gps-acc">
-      <div id="acc">0</div>
+    <div id="gps-dashboard">
+
+    <div class="gps-acc">
+        <div id="acc">0</div>
+        <span></span>
+    </div>
+      
       <p></p>
+      
       <p>GPS準確度</p>
     </div>
     <div class="menu-section">
@@ -1018,6 +1094,7 @@
             <td>
               <p>談心室</p>
               <p>教師研究室</p>
+              <p>土木系辦公室</p>
               <p>系主任曁所長辦公室</p>
               <p>營建科技中心辦公室</p>
               <p>再生暨複合材料精密實驗室</p>
@@ -1623,7 +1700,7 @@
           <tr>
             <td>2<sub>F</sub></td>
             <td>
-              <p>系所辦公室</p>
+              <p>機械系辦公室</p>
               <p>精密量測實驗室</p>
               <p>氣液壓控制實驗室</p>
               <p>磨潤與固力實驗室</p>
@@ -1743,7 +1820,7 @@
             <td>2<sub>F</sub></td>
             <td>
               <p>研討室</p>
-              <p>系辦公室</p>
+              <p>電機系辦公室</p>
               <p>教師研究室</p>
             </td>
           </tr>
@@ -2230,6 +2307,202 @@
       </div>
     </div>
   </div>
+
+  <div id="poi_19" class="side-card">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_19.jpg">
+      </div>
+      <div class="title">
+        <h1>籃球場</h1>
+      </div>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_20" class="side-card">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_20.jpg">
+      </div>
+      <div class="title">
+        <h1>桌球室</h1>
+      </div>
+      <h3>體育室2樓</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_21" class="side-card">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_21.jpg">
+      </div>
+      <div class="title">
+        <h1>網球場</h1>
+      </div>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_22" class="side-card">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_22.jpg">
+      </div>
+      <div class="title">
+        <h1>羽毛球場</h1>
+      </div>
+      <h3>活動中心3樓</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_23" class="side-card">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_23.jpg">
+      </div>
+      <div class="title">
+        <h1>撞球室</h1>
+      </div>
+      <h3>體育室2樓</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_24" class="side-card">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_24.jpg">
+      </div>
+      <div class="title">
+        <h1>排球場</h1>
+      </div>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+  
 
   <div id="poi_25" class="side-card spec-card">
     <span class="bID" style="display:none">0</span>
@@ -2866,17 +3139,89 @@
     </div>
   </div>
 
+
+
   <div id="poi_42" class="side-card">
-    <span class="bID" style="display:none">0</span>
+    <span class="bID">29</span>
     <div class="card-content">
       <div class="circle-img">
         <img src="assets/poi_img/poi_42.jpg">
       </div>
       <div class="title">
-        <h1>盆洗室</h1>
-        <h2>Washing room</h2>
+        <h1>產學共榮園區大樓</h1>
       </div>
-      <h3>學生餐廳一樓</h3>
+      <div class="info">
+        <table>
+          <tr>
+            <td>
+              <h1>5</h1>
+              <p>樓層總數</p>
+            </td>
+            <td>
+              <h1>3,012</h1>
+              <p>占地面積</p>
+            </td>
+            <td>
+              <h1>104</h1>
+              <p>建築年度</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="floor">
+        <table cellspacing="20">
+          <tr>
+            <td>5<sub>F</sub></td>
+            <td>
+              <p>創新教學坊</p>
+              <p>自造工坊II</p>
+              <p>烘焙培育室</p>
+              <p>烘焙開發坊</p>
+              <p>烘焙創客工坊</p>
+            </td>
+          </tr>
+          <tr>
+            <td>4<sub>F</sub></td>
+            <td>
+              <p>創新教學坊</p>
+              <p>自造工坊I</p>
+              <p>自造工坊培育室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>3<sub>F</sub></td>
+            <td>
+              <p>創新設計工坊</p>
+              <p>創新設計培育室</p>
+              <p>科學探究培育室</p>
+            </td>
+          </tr>
+          <tr>
+            <td>2<sub>F</sub></td>
+            <td>
+              <p>木作創客工坊II</p>
+              <p>科學探究體驗坊I&II</p>
+            </td>
+          </tr>
+          <tr>
+            <td>1<sub>F</sub></td>
+            <td>
+              <p>木作創客工坊I</p>
+              <p>金屬創客工坊II</p>
+            </td>
+          </tr>
+          <tr class="thr">
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td>B<sub>1F</sub></td>
+            <td>
+              <p>金屬創客工坊</p>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
     <div class="nav-btn">
       <div>
@@ -2900,17 +3245,16 @@
     </div>
   </div>
 
-  <div id="poi_43" class="side-card">
+  <div id="poi_43" class="side-card sc1">
     <span class="bID" style="display:none">0</span>
     <div class="card-content">
       <div class="circle-img">
-        <img src="assets/poi_img/poi_42.jpg">
+        <img src="assets/poi_img/poi_27.jpg">
       </div>
       <div class="title">
-        <h1>盆洗室</h1>
-        <h2>Washing room</h2>
+        <h1>土木與空間資訊系</h1>
       </div>
-      <h3>幼保大樓一樓</h3>
+      <h3>土木工程館2F</h3>
     </div>
     <div class="nav-btn">
       <div>
@@ -2934,17 +3278,16 @@
     </div>
   </div>
 
-  <div id="poi_44" class="side-card">
+  <div id="poi_44" class="side-card sc1">
     <span class="bID" style="display:none">0</span>
     <div class="card-content">
       <div class="circle-img">
-        <img src="assets/poi_img/poi_42.jpg">
+        <img src="assets/poi_img/poi_27.jpg">
       </div>
       <div class="title">
-        <h1>盆洗室</h1>
-        <h2>Washing room</h2>
+        <h1>機械工程系</h1>
       </div>
-      <h3>籃球場旁</h3>
+      <h3>機械工程館2F</h3>
     </div>
     <div class="nav-btn">
       <div>
@@ -2967,6 +3310,653 @@
       </div>
     </div>
   </div>
+
+  <div id="poi_45" class="side-card sc2">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>建築與室內設計系</h1>
+      </div>
+      <h3>圖科大樓9F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_46" class="side-card sc0">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>資訊工程系所</h1>
+      </div>
+      <h3>綜合大樓6F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_47" class="side-card sc3">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>電子工程系所</h1>
+      </div>
+      <h3>電子工程館3F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div id="poi_48" class="side-card sc3">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>電機工程系所</h1>
+      </div>
+      <h3>電機工程館2F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div id="poi_49" class="side-card sc4">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>國際企業系</h1>
+      </div>
+      <h3>管理學院1F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div id="poi_50" class="side-card sc0">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>資訊管理系所</h1>
+      </div>
+      <h3>圖科大樓8F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_51" class="side-card sc4">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>企業管理系</h1>
+      </div>
+      <h3>管理學院3F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div id="poi_52" class="side-card sc5">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>金融管理系</h1>
+      </div>
+      <h3>人文大樓7F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div id="poi_53" class="side-card sc6">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>幼兒保育系所</h1>
+      </div>
+      <h3>幼兒保育館1F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div id="poi_54" class="side-card sc7">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>休閒與運動管理系所</h1>
+      </div>
+      <h3>生活創意大樓1F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div id="poi_55" class="side-card sc8">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>時尚生活創意設計系</h1>
+      </div>
+      <h3>生活創意大樓8F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_56" class="side-card sc9">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>餐飲管理系</h1>
+      </div>
+      <h3>南校區教學大樓4F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div id="poi_57" class="side-card sc4">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>應用外語系</h1>
+      </div>
+      <h3>人文大樓6F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div id="poi_58" class="side-card sc10">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>觀光遊憩系</h1>
+      </div>
+      <h3>人文大樓</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div id="poi_59" class="side-card sc11">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>數位多媒體設計系</h1>
+      </div>
+      <h3>幼兒保育館3F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div id="poi_60" class="side-card sc8">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_27.jpg">
+      </div>
+      <div class="title">
+        <h1>化妝品與時尚彩妝系所</h1>
+      </div>
+      <h3>綜合大樓4F</h3>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div id="poi_61" class="side-card sc2">
+      <span class="bID" style="display:none">0</span>
+      <div class="card-content">
+        <div class="circle-img">
+          <img src="assets/poi_img/poi_27.jpg">
+        </div>
+        <div class="title">
+          <h1>工業工程與管理系所</h1>
+        </div>
+        <h3>工業工程與管理館2F</h3>
+      </div>
+      <div class="nav-btn">
+        <div>
+          <span>
+            <i class="fas fa-ellipsis-h"></i>
+            <p>更多資訊</p>
+          </span>
+        </div>
+        <div>
+          <span>
+            <i class="fas fa-location-arrow"></i>
+            <p>指引地標</p>
+          </span>
+        </div>
+        <div>
+          <span>
+            <i class="fas fa-map-marked-alt"></i>
+            <p>路線引導</p>
+          </span>
+        </div>
+      </div>
+    </div>
+
+  <div id="poi_62" class="side-card">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_62.jpg">
+      </div>
+      <div class="title">
+        <h1>小木屋鬆餅SHINE MOOD</h1>
+      </div>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_63" class="side-card">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_63.jpg">
+      </div>
+      <div class="title">
+        <h1>展晟正修影印店</h1>
+      </div>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div id="poi_64" class="side-card">
+    <span class="bID" style="display:none">0</span>
+    <div class="card-content">
+      <div class="circle-img">
+        <img src="assets/poi_img/poi_64.jpg">
+      </div>
+      <div class="title">
+        <h1>正修守護樹</h1>
+      </div>
+    </div>
+    <div class="nav-btn">
+      <div>
+        <span>
+          <i class="fas fa-ellipsis-h"></i>
+          <p>更多資訊</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-location-arrow"></i>
+          <p>指引地標</p>
+        </span>
+      </div>
+      <div>
+        <span>
+          <i class="fas fa-map-marked-alt"></i>
+          <p>路線引導</p>
+        </span>
+      </div>
+    </div>
+  </div>
+
+
 
   <script>
     //AR.logger.activateDebugMode();
