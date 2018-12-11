@@ -102,7 +102,7 @@ function Marker(poiData) {
     this.radardrawablesSelected.push(this.radarCircleSelected);
 
 
-
+    
     if (poiData.class == 0) {
         this.actionRange = [];
         var firstUserLocation = new AR.GeoLocation(poiData.userLat, poiData.userLon);
@@ -110,7 +110,7 @@ function Marker(poiData) {
             poiData.area = [{
                 "lat": poiData.lat,
                 "lon": poiData.lon,
-                "radius": 20
+                "radius": 30
             }];
             
         }
@@ -122,13 +122,18 @@ function Marker(poiData) {
                         World.currentLocation = poiData.id;
                         World.onLocationArea(poiData.title, true);
                         locationChanged(poiData.title, true);
+                        consoleWrite(poiData.title + " 進入");
                     }
                 },
                 onExit: function () {
+
+                    if(Marker.prototype.checkAreaStatus(poiData.id)==1)return;
+
                     if (World.currentLocation == poiData.id) {
                         World.currentLocation = null;
                         World.onLocationArea(poiData.title, false);
                         locationChanged("", false);
+                        consoleWrite(poiData.title + " 退出");
                     }
                 }
             }));
@@ -153,6 +158,19 @@ function Marker(poiData) {
 
     return this;
 }
+
+Marker.prototype.checkAreaStatus = function (marker) {
+    for (var i in World.markerList) {
+        if (World.markerList[i].poiData.id == marker) {
+            var areaLocation = new AR.GeoLocation(userCoordinate.lat, userCoordinate.lon);
+            for (var j in World.markerList[i].actionRange) {
+
+                if (World.markerList[i].actionRange[j].isInArea(areaLocation)) return 1;
+            }
+        }
+    }
+    return 0;
+};
 
 Marker.prototype.onClickTrigger = function (marker) {
     return function () {

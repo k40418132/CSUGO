@@ -38,6 +38,7 @@ function configProgress(status) {
     localStorage.setItem("radar", $("#setting-radar").prop("checked"));
     localStorage.setItem("gps", $("#setting-gps").prop("checked"));
     localStorage.setItem("console", $("#setting-console").prop("checked"));
+    localStorage.setItem("browser", $("#setting-browser").prop("checked"));
     localStorage.setItem("maxDistance", $("#maxDistance-slider").val());
     localStorage.setItem("minDistance", $("#minDistance-slider").val());
     localStorage.setItem("scaleFactor", $("#markerScale-slider").val());
@@ -53,6 +54,7 @@ function configProgress(status) {
     if (localStorage.getItem("radar") == "true") $("#setting-radar").click();
     if (localStorage.getItem("gps") == "true") $("#setting-gps").click();
     if (localStorage.getItem("console") == "true") $("#setting-console").click();
+    if (localStorage.getItem("browser") == "true") $("#setting-browser").click();
 
     var c_maxDistance = Number(localStorage.getItem("maxDistance"));
     var c_minDistance = Number(localStorage.getItem("minDistance"));
@@ -91,10 +93,6 @@ function configProgress(status) {
       $("#altOffset-slider").val(c_altOffset);
       World.altOffset = c_altOffset;
     }
-    consoleWrite(localStorage.maxDistance);
-    consoleWrite(localStorage.minDistance);
-    consoleWrite(localStorage.scaleFactor);
-    consoleWrite(bubbleAngle);
   }
 
 }
@@ -152,7 +150,7 @@ function onOrientationchange() {
 
 function keyWordInitial() {
   for (var i = 0; i < poiData.length; i++) {
-    if (!poiData[i].keyword) poiData[i].keyword = {};
+    if (!poiData[i].keyword) poiData[i].keyword = [];
     $("#" + poiData[i].id + " .floor tr:not(.thr)").each(function (index) {
       var c = $(this).find("td:first").text();
       poiData[i].keyword[index + 1] = {};
@@ -176,11 +174,11 @@ function keyWordInitial() {
 
 
 
-function updateLocationAccuracy(acc,inApp) {
+function updateLocationAccuracy(acc, inApp) {
   if (inApp) {
     World.isRuninApp = true;
     $(".gps-acc span").html("公尺");
-  }else $(".gps-acc span").html("等級");
+  } else $(".gps-acc span").html("等級");
   acc > 9 ? $(".gps-acc").addClass("spacingBalance") : $(".gps-acc").removeClass("spacingBalance");
 
   var demo = new CountUp('acc', Number($("#acc").html()), acc, 0, 1);
@@ -195,29 +193,15 @@ function updateLocationAccuracy(acc,inApp) {
     $("#gps-dashboard p:first").html("不穩定");
     $("#menu-nav").removeClass();
     $("#menu-nav").addClass("acc-danger");
-  } else if ((acc == 2 && !inApp) || acc > 12 && acc <= 25 ) {
+  } else if ((acc == 2 && !inApp) || acc > 12 && acc <= 25) {
     $("#gps-dashboard p:first").html("良好");
     $("#menu-nav").removeClass();
     $("#menu-nav").addClass("acc-warning");
-  } else if((acc == 1 && !inApp) || acc < 12 ) {
+  } else if ((acc == 1 && !inApp) || acc < 12) {
     $("#gps-dashboard p:first").html("最佳");
     $("#menu-nav").removeClass();
   }
-  consoleWrite("Gps: "+acc);
 }
-
-
-/*function initLocationAccuracy() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(updateLocationAccuracy);
-    showBubble("支援Geolocation");
-  } else {
-    showBubble("不支援Geolocation");
-  }
-}*/
-
-
-
 
 $(function () {
   $(".square").css("top", $("#loading-mask h1").prop('offsetTop') - 80 + 'px');
@@ -239,18 +223,15 @@ $(function () {
     $(".spinner").delay(2000).fadeIn(300);
   }, 1000);
 
-  setTimeout('InitPart1()',5000);
+  setTimeout('InitPart1()', 5000);
 })
 
-function InitPart1(){
-
-  
-
+function InitPart1() {
   $("area").click(function (e) {
     e.preventDefault();
     var id = $(this).attr('title');
-    $(".side-card.Showed").each(function () { 
-      if(id != $(this).attr('id'))showCard(0, $(this).attr('id'));     
+    $(".side-card.Showed").each(function () {
+      if (id != $(this).attr('id')) showCard(0, $(this).attr('id'));
     });
     $("#" + id).hasClass("Showed") ? showCard(0, id) : showCard(1, id);
   })
@@ -267,38 +248,38 @@ function InitPart1(){
       World.flatMode = true;
     }
     var $div = $(this);
-    setTimeout(function(){
+    setTimeout(function () {
       routeNavigation($div);
       $("#target-location").show();
       $(".mode-panel").hasClass('switchMode') ? AR.hardware.camera.enabled = false : AR.hardware.camera.enabled = true;
-    },1000);
+    }, 800);
     $(".fa-route").parent().addClass("showRoute");
     World.onScreenClick();
-    $(".Showed").each(function(){showCard(0,$(this).attr('id'))});
+    $(".Showed").each(function () { showCard(0, $(this).attr('id')) });
     showSearchPanel(false);
     $(".classList").removeClass("showList");
     $(".mode-panel .fa-crosshairs").parent().click();
-    
+
   })
 
-  $(".mode-panel .fa-route").parent().click(function(){
+  $(".mode-panel .fa-route").parent().click(function () {
     showBubble("取消路線引導");
     $(this).removeClass("showRoute");
     cancelRoute();
   })
 
-  $(".side-card").each(function(i){
-    if(!poiData[i].url){
+  $(".side-card").each(function (i) {
+    if (!poiData[i].url) {
       $(this).find(".fa-ellipsis-h").parent().parent().hide();
     }
   })
 
-  $(".nav-btn .fa-ellipsis-h").parent().parent().click(function(){
+  $(".nav-btn .fa-ellipsis-h").parent().parent().click(function () {
     var url = poiData[$('.side-card').index($(this).parents(".side-card"))].url
-    AR.context.openInBrowser(url,true);
+    AR.context.openInBrowser(url, World.isUseBrowser);
   })
 
-  $(".nav-btn .fa-location-arrow").parent().parent().click(function(){
+  $(".nav-btn .fa-location-arrow").parent().parent().click(function () {
     locked($(this));
   })
   $("#flatmapContainer").on('transitionend webkitTransitionEnd oTransitionEnd', function () {
@@ -345,6 +326,7 @@ function InitPart1(){
     $('#flatmap').toggleClass('switchMode');
     $(".mode-panel").hasClass('switchMode') ? AR.hardware.camera.enabled = false : AR.hardware.camera.enabled = true;
     World.flatMode = !World.flatMode;
+    if (World.flatMode) setTimeout(function () { $(".mode-panel .fa-crosshairs").parent().click(); }, 800);
   })
   $(".btn-panel .fa-location-arrow").parent().click(function () {
     showBubble("已取消指引");
@@ -378,7 +360,7 @@ function InitPart1(){
     $(this).addClass("listChecked");
     $(this).siblings().removeClass();
     $(".btn-panel").removeClass("showPanel");
-    showBubble("分類切換為<b>"+$(this).html()+"</b>");
+    showBubble("分類切換為<b>" + $(this).html() + "</b>");
     World.onMarkerClassFilter($(".classList li").index(this));
   })
 
@@ -387,6 +369,9 @@ function InitPart1(){
   })
   $("#setting-console").change(function () {
     this.checked ? $("#consoleBox").show() : $("#consoleBox").hide();
+  })
+  $("#setting-browser").change(function () {
+    this.checked ? World.isUseBrowser = true : World.isUseBrowser = false;
   })
   $("#searching").focus(function () {
     $(".side-card").css('display', 'none');
@@ -467,7 +452,6 @@ function InitPart1(){
 
   var hammer = new Hammer(document.querySelector('body,html'));
   var hammer2 = new Hammer(document.querySelector('#location'));
-  //var hammer3 = new Hammer(document.querySelector('#plotGps'));
 
   hammer.on('swipe', function (ev) {
     if (ev.deltaTime < 400) {
@@ -482,24 +466,6 @@ function InitPart1(){
     consoleWrite($("#location").css('animation-name'));
   });
 
-  /*
-   hammer3.on("pan", function (ev) {
-     var $div = $('#plotGps');
-     if(!isDragging){
-       isDragging = true;
-       lastX = $div[0].offsetLeft;//x坐标
-       lastY = $div[0].offsetTop;//y坐标
-     }
-     $div.css({
-       left: lastX + ev.deltaX,
-       top: lastY + ev.deltaY
-     });
-     if (ev.isFinal)isDragging = false;
-   });
-  hammer3.get('pinch').set({ enable: true });
-  hammer3.get('pan').set({ threshold: 0, direction: Hammer.DIRECTION_ALL });
-*/
-
   $("#location").bind("click", function () {
     $(this).css('animation', 'locationChanged 5s');
   });
@@ -513,33 +479,17 @@ function InitPart1(){
       showBubble();
     }, 30);
   });
-  //localStorage.clear();
   screenOrientation = false;
   bubbleNoticePool = [];
   onOrientationchange();
   keyWordInitial();
-  canvasInit();
-  //initLocationAccuracy();
-  //showMenu(1);
-  //showCard(true, "poi_1");
+  mapTransform();
   window.addEventListener("orientationchange", onOrientationchange, false);
   consoleWrite(navigator.userAgent);
-
   configProgress(0);
-
-  //FastClick.attach(document.body);
   InitPart2();
-
 }
 
-
-function canvasInit() {
-  mapTransform();
-  /*var canvas = document.getElementById("pathCanvas");
-  canvas.addEventListener('click', function (evt) {
-    var mousePos = getMousePos(canvas, evt);
-  }, false);*/
-}
 function getMousePos(c, evt) {
   var rect = c.getBoundingClientRect();
   return {
@@ -567,15 +517,6 @@ function Map_drawAllPoint() {
 
 function drawUserLocation(lat, lon) {
   var cood = Location2Pixel(lat, lon);
-  /*$('#pathCanvas').clearCanvas()*/
-  /*$('#pathCanvas').drawArc({
-    fillStyle: 'red',
-    x: cood.x, y: cood.y,
-    radius: 5,
-    start: 0, end: 360,
-    inDegrees: false
-  });*/
-  
   $('#user-location').css('transform', 'translate(' + cood.x + 'px,' + cood.y + 'px)');
   userCoordinate = { "x": cood.x, "y": cood.y, "lat": lat, "lon": lon };
 }
@@ -598,7 +539,7 @@ function drawPath(path) {
   }
   $('#pathCanvas').clearCanvas();
   $('#target-location').css('transform', 'translate(' + coordinate[coordinate.length - 1][0] + 'px,' + coordinate[coordinate.length - 1][1] + 'px)');
-  
+
   var obj = {
     strokeStyle: '#4285f4',
     strokeWidth: 13,
@@ -654,7 +595,7 @@ let displayImageCurrentScale = 1;
 let isPanning = false;
 
 
-function InitPart2(){
+function InitPart2() {
   imageContainer = document.querySelector('#flatmap');
   displayImage = document.querySelector('#flatmapContainer');
   resizeContainer();
@@ -765,15 +706,11 @@ function updateRange() {
 
 /***************最短路徑***************** */
 function Dijkstra(start, end) {
-  var rows = matrix.length,//rows和cols一样，其实就是顶点个数
-    cols = matrix[0].length;
+  var rows = matrix.length,cols = matrix[0].length;
   var pre = [];
   var path = [];
   var flag = new Array(rows).fill(false);
 
-  if (rows !== cols || start >= rows || end >= rows) return new Error("邻接矩阵错误或者源点错误");
-
-  //初始化distance
   var distance = new Array(rows).fill(Infinity);;
   distance[start] = 0;
   var minIndex, minValue;
@@ -804,16 +741,9 @@ function Dijkstra(start, end) {
   path.push(start);
   return path.reverse();
 }
-
-/**
-* 邻接矩阵
-* 值为顶点与顶点之间边的权值，0表示无自环，一个大数表示无边(比如10000)
-* */
-const MAX_INTEGER = Infinity;//没有边或者有向图中无法到达
-const MIN_INTEGER = 0;//没有自环
-var EARTH_RADIUS = 6378.137; //地球半徑
-
-//將用角度表示的角轉換為近似相等的用弧度表示的角 java Math.toRadians
+const MAX_INTEGER = Infinity;
+const MIN_INTEGER = 0;
+var EARTH_RADIUS = 6378.137;
 function rad(d) {
   return d * Math.PI / 180.0;
 }
@@ -830,9 +760,8 @@ function getDistance(lat1, lon1, lat2, lon2) {
   return s * 1000;
 }
 
-
 function routeNavigation(e) {
-  if(updateRouteTimer)clearInterval(updateRouteTimer);
+  if (updateRouteTimer) clearInterval(updateRouteTimer);
   var endPoint;
   var id = $(e).parents(".side-card").attr('id');
   for (var i in poiData) {
@@ -856,7 +785,7 @@ function routeNavigation(e) {
   GlobalPath = Dijkstra(nearbyPoint, endPoint);
   consoleWrite("出發點:" + nearbyPoint + " 目標點:" + endPoint);
   drawPath(GlobalPath);
-  updateRouteTimer = setInterval("updateRoute()",3000);
+  updateRouteTimer = setInterval("updateRoute()", 3000);
 }
 
 function arrayMin(arrs) {
@@ -871,8 +800,8 @@ function arrayMin(arrs) {
   return flag;
 }
 
-function updateRoute(){
-  if(isPanning)return;
+function updateRoute() {
+  if (isPanning) return;
   var minDistance = Infinity;
   var tmp;
   var nearbyPoint;
@@ -884,17 +813,17 @@ function updateRoute(){
       nearbyPoint = GlobalPath[i];
     }
   }
-  while(GlobalPath[0]!=nearbyPoint){
+  while (GlobalPath[0] != nearbyPoint) {
     GlobalPath.shift();
   }
   drawPath(GlobalPath);
-  if(GlobalPath.length==1 && minDistance < 10){
-   cancelRoute();
-   showBubble("到達目的地!"); 
+  if (GlobalPath.length == 1 && minDistance < 10) {
+    cancelRoute();
+    showBubble("到達目的地!");
   }
 }
 
-function cancelRoute(){
+function cancelRoute() {
   $('#pathCanvas').clearCanvas();
   $('#target-location').hide();
   clearInterval(updateRouteTimer);

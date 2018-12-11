@@ -24,7 +24,7 @@ body {
     overflow-y: hidden;
 }
 
-#refreshBtn {
+/*#refreshBtn {
     position: absolute;
     background: #4183fd;
     padding: 10px;
@@ -34,7 +34,7 @@ body {
     right: 0;
     left: 0;
     width: fit-content;
-}
+}*/
 
 #configBtn {
     padding: 5px;

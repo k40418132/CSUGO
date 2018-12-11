@@ -9,20 +9,19 @@
   <script type="text/javascript" src="js/jcanvas.min.js"></script>
 
 
-  <script type="text/javascript" src="js/front.js"></script>
+  
   <script type="text/javascript" src="js/poiData.js"></script>
   <script type="text/javascript" src="js/map.js"></script>
   <script type=" text/javascript" src="js/marker.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="js/hammer.min.js"></script>
-  <script type="text/javascript" src="js/fastclick.js"></script>
   <script type="text/javascript" src="js/clustering.js"></script>
   <script type="text/javascript" src="js/countUp.js"></script>
   <script type="text/javascript" src="js/radar.js"></script>
+  <script type="text/javascript" src="js/front.js"></script>
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
     crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="css/remove.css">
   <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 
@@ -55,13 +54,13 @@
         <p>為迅速認識正修而生</p></div>
       </div>
   </div>
-  <!--<span id="refreshBtn" onclick='javascript:window.location.reload();'>重新整理</span>-->
+
   <div id="flatmap">
     <div id="flatmapContainer">
       <img id="csumap" src="assets/csumap.png" usemap="#image-map">
 
       <canvas id="pathCanvas" width="4800" height="2748">
-        <p>这里放一些备用的内容，因为有些浏览器不支持 Canvas </p>
+        <p>不支持Canvas </p>
       </canvas>
       <div id="user-location"></div>
       <div id="target-location"></div>
@@ -91,7 +90,7 @@
       shape="poly">
     <area target="" alt="area_4" title="poi_4" href="" coords="2742,2132,2751,2289,2831,2284,2844,2462,2941,2462,2937,2386,2988,2378,2988,2250,2941,2233,2937,2123"
       shape="poly">
-    <area target="" alt="area_45" title="poi_45" href="" coords="3175,1737,3259,1750,3251,1818,3289,1852,3378,1856,3361,2064,3289,2072,3234,2021,3221,1971,3166,1954"
+    <area target="" alt="area_45" title="poi_42" href="" coords="3175,1737,3259,1750,3251,1818,3289,1852,3378,1856,3361,2064,3289,2072,3234,2021,3221,1971,3166,1954"
       shape="poly">
     <area target="" alt="area_1" title="poi_1" href="" coords="2742,1146,2878,1163,2861,1261,2835,1350,2818,1435,2895,1495,3030,1515,3098,1490,3090,1405,3030,1372,2963,1312,2996,1091,2873,1074,2755,1057"
       shape="poly">
@@ -183,6 +182,13 @@
         <span>開發人員輸出</span>
         <label class="switch">
           <input id="setting-console" type="checkbox">
+          <span class="switch-slider"></span>
+        </label>
+      </div>
+      <div class="menu-setting menu-switch">
+        <span>使用外部瀏覽器</span>
+        <label class="switch">
+          <input id="setting-browser" type="checkbox">
           <span class="switch-slider"></span>
         </label>
       </div>
@@ -2652,7 +2658,7 @@
     <span class="bID" style="display:none">0</span>
     <div class="card-content">
       <div class="circle-img">
-        <img src="assets/poi_img/poi_28.jpg">
+        <img src="assets/poi_img/poi_27.jpg">
       </div>
       <div class="title">
         <h1>軍訓處</h1>
@@ -2686,7 +2692,7 @@
     <span class="bID" style="display:none">0</span>
     <div class="card-content">
       <div class="circle-img">
-        <img src="assets/poi_img/poi_29.jpg">
+        <img src="assets/poi_img/poi_27.jpg">
       </div>
       <div class="title">
         <h1>體育組</h1>
@@ -2720,7 +2726,7 @@
     <span class="bID" style="display:none">0</span>
     <div class="card-content">
       <div class="circle-img">
-        <img src="assets/poi_img/poi_30.jpg">
+        <img src="assets/poi_img/poi_27.jpg">
       </div>
       <div class="title">
         <h1>學生事務處</h1>
@@ -2768,7 +2774,7 @@
     <span class="bID" style="display:none">0</span>
     <div class="card-content">
       <div class="circle-img">
-        <img src="assets/poi_img/poi_31.jpg">
+        <img src="assets/poi_img/poi_27.jpg">
       </div>
       <div class="title">
         <h1>總務處</h1>
@@ -2820,7 +2826,7 @@
     <span class="bID" style="display:none">0</span>
     <div class="card-content">
       <div class="circle-img">
-        <img src="assets/poi_img/poi_32.jpg">
+        <img src="assets/poi_img/poi_27.jpg">
       </div>
       <div class="title">
         <h1>國際事務處</h1>
@@ -2854,13 +2860,13 @@
     <span class="bID" style="display:none">0</span>
     <div class="card-content">
       <div class="circle-img">
-        <img src="assets/poi_img/poi_33.jpg">
+        <img src="assets/poi_img/poi_27.jpg">
       </div>
       <div class="title">
         <h1>圖書資訊處</h1>
         <h2>Office of Library and Information</h2>
       </div>
-      <h3></h3>
+      <h3>圖科大樓圖書館</h3>
     </div>
     <div class="nav-btn">
       <div>
@@ -2888,7 +2894,7 @@
     <span class="bID" style="display:none">0</span>
     <div class="card-content">
       <div class="circle-img">
-        <img src="assets/poi_img/poi_34.jpg">
+        <img src="assets/poi_img/poi_27.jpg">
       </div>
       <div class="title">
         <h1>會計處</h1>
@@ -3003,12 +3009,6 @@
         <span>
           <i class="fas fa-location-arrow"></i>
           <p>指引地標</p>
-        </span>
-      </div>
-      <div>
-        <span>
-          <i class="fas fa-map-marked-alt"></i>
-          <p>路線引導</p>
         </span>
       </div>
     </div>
@@ -3955,11 +3955,8 @@
       </div>
     </div>
   </div>
-
-
-
   <script>
-    //AR.logger.activateDebugMode();
+  //
   </script>
 </body>
 

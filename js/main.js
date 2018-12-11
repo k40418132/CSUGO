@@ -9,9 +9,10 @@ var World = {
     currentClassMarker: null,
     clusterAngle: 0,
     altOffset: 0,
-    flatMode:false,
-    isNavigation:false,
+    flatMode: false,
+    isNavigation: false,
     isRuninApp: false,
+    isUseBrowser: false,
 
     loadPoisFromJsonData: function loadPoisFromJsonDataFn(lat, lon) {
         World.markerList = [];
@@ -27,6 +28,7 @@ var World = {
                 "class": poiData[i].class,
                 "color": poiData[i].color,
                 "area": poiData[i].area,
+                "distance": 0,
                 "userLat": lat,
                 "userLon": lon
             };
@@ -43,29 +45,33 @@ var World = {
     locationChanged: function locationChangedFn(lat, lon, alt, acc) {
 
         if (!World.initiallyLoadedData) {
-            setTimeout(function(){
+            setTimeout(function () {
                 World.loadPoisFromJsonData(lat, lon);
-            },5000);
+            }, 5000);
             World.initiallyLoadedData = true;
         }
         World.updateDistance(lat, lon, alt, acc);
     },
 
     updateDistance: function updateDistanceFn(lat, lon, alt, acc) {
-        if (!this.isRuninApp) updateLocationAccuracy(acc,false);
+        if (!this.isRuninApp) updateLocationAccuracy(acc, false);
         drawUserLocation(lat, lon);
-        if(World.flatMode)return;
-        
+        if (World.flatMode) return;
+
         for (var i = 0; i < World.markerList.length; i++) {
             var distance = World.markerList[i].markerObject.locations[0].distanceToUser();
             var distanceToUserValue = (distance > 999) ? ((distance / 1000).toFixed(2) + " km") : (Math.round(distance) + " m");
             World.markerList[i].distanceLabel.text = distanceToUserValue;
+            World.markerList[i].poiData.distance = distanceToUserValue;
             //World.markerList[i].markerObject.locations[0].altitude = alt;
         }
 
 
         var poiWait2Sort = ClusterHelper.createClusteredPlaces(this.clusterAngle, { 'lat': lat, 'lon': lon }, this.currentClassMarker);
         //consoleWrite("b: " + bubbleAngle + " c: " + this.clusterAngle + " offset: " + this.altOffset);
+        poiWait2Sort = poiWait2Sort.sort(function (a, b) {
+            return a.distance > b.distance ? 1 : -1;
+        });
         for (var i = 0; i < poiWait2Sort.length; i++) {
             if (poiWait2Sort[i].type == "cluster") {
 
@@ -81,7 +87,7 @@ var World = {
             } else {
                 for (var m = 0; m < World.markerList.length; m++) {
                     if (World.markerList[m].poiData.id == poiWait2Sort[i].places[0].id) {
-                        World.markerList[m].markerObject.locations[0].altitude = alt - 10;
+                        World.markerList[m].markerObject.locations[0].altitude = alt - 5;
                     }
                 }
             }
@@ -127,9 +133,9 @@ var World = {
     onLocationArea: function onLocationAreaFn(title, hide) {
         for (var i = 0; i < World.markerList.length; i++) {
             if (World.markerList[i].poiData.title == title) {
-                if(hide){
+                if (hide) {
                     World.markerList[i].markerObject.enabled = false;
-                }else if(this.currentClassMarker[0].class == World.markerList[i].poiData.class)World.markerList[i].markerObject.enabled = true;
+                } else if (this.currentClassMarker[0].class == World.markerList[i].poiData.class) World.markerList[i].markerObject.enabled = true;
             }
         }
     },
